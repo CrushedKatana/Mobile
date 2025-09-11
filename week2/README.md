@@ -43,10 +43,10 @@ Setiap aspek dalam Flutter—mulai dari Widget yang membentuk antarmuka pengguna
 ## Soal 3
 Rangkumlah materi dari codelab ini menjadi poin-poin penting yang dapat Anda gunakan untuk membantu proses pengembangan aplikasi mobile menggunakan framework Flutter.
 ### jawaban 
-Cara Memulai  dart 
-Evolusi atau Sejarah Dart
-Cara Kerja Dart
-Pengenalan Struktur Bahasa Dart
+* Cara Memulai  dart 
+* Evolusi atau Sejarah Dart
+* Cara Kerja Dart
+* Pengenalan Struktur Bahasa Dart
 
 ## Soal 4
 Buatlah penjelasan dan contoh eksekusi kode tentang perbedaan Null Safety dan Late variabel !
