@@ -6,9 +6,9 @@ void main(List<String> args) {
   counter++;
   }
 
-  // do {
-  //   print(counter);
-  //   counter++;
-  // } while (counter < 77);
+  do {
+    print(counter);
+    counter++;
+  } while (counter < 77);
 
 }
