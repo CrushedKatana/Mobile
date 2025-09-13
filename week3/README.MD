@@ -25,6 +25,7 @@ Silakan coba eksekusi (Run) kode pada langkah 1 tersebut. Apa yang terjadi? Jela
 Terjadi error karena Dart bersifat case-sensitive. Keyword yang benar adalah else if dan else (huruf kecil semua).
 
 ![](./img/1.png)
+
 Kode akan berjalan tanpa error dan menghasilkan output berikut:
 
 1. Kondisi pertama (test == "test1") bernilai false karena "test2" tidak sama dengan "test1".
@@ -200,6 +201,8 @@ void main(List<String> args) {
 }
 ```
 #### Output 
+
+![](./img/10.png)
 
 * Iterasi i = 0 :
 1. isPrime diatur menjadi false
