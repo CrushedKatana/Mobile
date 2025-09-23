@@ -248,5 +248,3 @@ void main(List<String> args) {
 *    ...dan seterusnya hingga lambda = 201
       - Jika sebuah angka (1) prima, loop for bagian dalam akan selesai tanpa pernah menemukan faktor, sehingga IsPrise tetap true.
       - Jika sebuah angka (1) bukan prima, loop for bagian dalam akan menemukan faktor, mengubah isprise menjadi folse, dan break.
-
-
