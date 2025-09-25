@@ -6,7 +6,6 @@ Welcome to my comprehensive mobile development repository! This project document
 
 **Student:** Charellino Kalingga Sadewo  
 **NIM:** 2341720205  
-**Focus:** Mobile Application Development with Dart & Flutter
 
 ## 🎯 Learning Objectives
 
@@ -123,14 +122,6 @@ Mobile/
     ├── 📂 img/
     └── 📂 src/
 ```
-
-## 🎯 Learning Progress
-
-- [x] **Week 2:** Dart Programming Fundamentals (100%)
-- [x] **Week 3:** Advanced Control Flows & Algorithms (100%)
-- [ ] **Week 4:** Flutter Framework Introduction (In Progress)
-- [ ] **Week 5:** Flutter Widget Development (Planned)
-- [ ] **Week 6:** State Management (Planned)
 
 ## 🏆 Key Achievements
 
