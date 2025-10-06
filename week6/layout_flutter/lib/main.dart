@@ -12,12 +12,12 @@ class MyApp extends StatelessWidget {
       padding: const EdgeInsets.all(32),
       child: Row(
         children: [
-          // 🟩 Soal 1: Expanded + Column dengan alignment start
+          // Soal 1: Expanded + Column dengan alignment start
           Expanded(
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                // 🟩 Soal 2: Padding bawah + warna abu-abu
+                // Soal 2: Padding bawah + warna abu-abu
                 Container(
                   padding: const EdgeInsets.only(bottom: 8),
                   child: const Text(
@@ -36,7 +36,7 @@ class MyApp extends StatelessWidget {
               ],
             ),
           ),
-          // 🟩 Soal 3: Icon bintang merah + teks angka 41
+          // Soal 3: Icon bintang merah + teks angka 41
           const Icon(
             Icons.star,
             color: Colors.red,
