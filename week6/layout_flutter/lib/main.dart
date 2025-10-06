@@ -7,7 +7,15 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    // Bagian titleSection (hasil praktikum 1)
+    // Bagian gambar (Langkah 2)
+    Widget imageSection = Image.asset(
+      'images/lake.jpg', // sesuaikan dengan nama file kamu
+      width: 600,
+      height: 240,
+      fit: BoxFit.cover,
+    );
+
+    // 🔹 Bagian titleSection (praktikum 1)
     Widget titleSection = Container(
       padding: const EdgeInsets.all(32),
       child: Row(
@@ -43,7 +51,7 @@ class MyApp extends StatelessWidget {
       ),
     );
 
-    // Bagian buttonSection (hasil praktikum 2)
+    // 🔹 Bagian buttonSection (praktikum 2)
     Color color = Theme.of(context).primaryColor;
 
     Widget buttonSection = Row(
@@ -55,7 +63,7 @@ class MyApp extends StatelessWidget {
       ],
     );
 
-    // Langkah 1: Buat widget textSection (praktikum 3)
+    // 🔹 Bagian textSection (praktikum 3)
     Widget textSection = Container(
       padding: const EdgeInsets.all(32),
       child: const Text(
@@ -69,25 +77,26 @@ class MyApp extends StatelessWidget {
       ),
     );
 
-    // Langkah 2: Tambahkan ke body
+    // 🔹 Langkah 3: Gunakan ListView agar bisa di-scroll
     return MaterialApp(
-      title: 'Flutter layout: Charellino Kalingga Sadewo - 2341720205',
+      title: 'Flutter layout: Charellino Kalingga S - 2341720205',
       home: Scaffold(
         appBar: AppBar(
           title: const Text('Flutter layout demo'),
         ),
         body: ListView(
           children: [
-            titleSection,   // bagian judul
-            buttonSection,  // bagian tombol
-            textSection,    // bagian teks
+            imageSection,   // gambar di atas
+            titleSection,   // judul
+            buttonSection,  // tombol
+            textSection,    // teks
           ],
         ),
       ),
     );
   }
 
-  // Method dari praktikum sebelumnya (_buildButtonColumn)
+  // 🔹 Method dari praktikum 2
   Column _buildButtonColumn(Color color, IconData icon, String label) {
     return Column(
       mainAxisSize: MainAxisSize.min,
