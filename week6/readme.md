@@ -131,7 +131,9 @@ Dua item terakhir di baris judul adalah ikon bintang, set dengan warna merah, da
       ),
     );
 ```
-![](prak1.png)
+Ouput 
+![](./img/prak1.png)
+
 ### Praktikum 2: Implementasi button row
 Selesaikan langkah-langkah praktikum berikut ini dengan melanjutkan dari praktikum sebelumnya.
 
@@ -193,6 +195,10 @@ Widget buttonSection = Row(
 ```
 Langkah 3: Tambah button section ke body
 Tambahkan variabel buttonSection ke dalam body seperti berikut:
+
+Output: 
+![](./img/prak2.png)
+
 ## 2. Silakan implementasikan di project baru "basic_layout_flutter" dengan mengakses sumber ini: https://docs.flutter.dev/codelabs/layout-basics
 
 ## 3. Kumpulkan link commit repository GitHub Anda kepada dosen yang telah disepakati!
