@@ -7,7 +7,7 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    // 🔸 Bagian titleSection (hasil dari praktikum sebelumnya)
+    // Bagian titleSection (hasil praktikum 1)
     Widget titleSection = Container(
       padding: const EdgeInsets.all(32),
       child: Row(
@@ -43,7 +43,7 @@ class MyApp extends StatelessWidget {
       ),
     );
 
-    // 🔸 Langkah 2: Buat widget buttonSection
+    // Bagian buttonSection (hasil praktikum 2)
     Color color = Theme.of(context).primaryColor;
 
     Widget buttonSection = Row(
@@ -55,23 +55,39 @@ class MyApp extends StatelessWidget {
       ],
     );
 
+    // Langkah 1: Buat widget textSection (praktikum 3)
+    Widget textSection = Container(
+      padding: const EdgeInsets.all(32),
+      child: const Text(
+        'Carilah teks di internet yang sesuai '
+        'dengan foto atau tempat wisata yang ingin '
+        'Anda tampilkan. '
+        'Tambahkan nama dan NIM Anda sebagai '
+        'identitas hasil pekerjaan Anda. '
+        'Selamat mengerjakan 🙂.',
+        softWrap: true,
+      ),
+    );
+
+    // Langkah 2: Tambahkan ke body
     return MaterialApp(
-      title: 'Flutter layout: Nama Anda - NIM Anda',
+      title: 'Flutter layout: Charellino Kalingga Sadewo - 2341720205',
       home: Scaffold(
         appBar: AppBar(
           title: const Text('Flutter layout demo'),
         ),
-        body: Column(
+        body: ListView(
           children: [
             titleSection,   // bagian judul
             buttonSection,  // bagian tombol
+            textSection,    // bagian teks
           ],
         ),
       ),
     );
   }
 
-  // 🔸 Langkah 1: Buat method _buildButtonColumn
+  // Method dari praktikum sebelumnya (_buildButtonColumn)
   Column _buildButtonColumn(Color color, IconData icon, String label) {
     return Column(
       mainAxisSize: MainAxisSize.min,
