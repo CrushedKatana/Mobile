@@ -197,7 +197,7 @@ Langkah 3: Tambah button section ke body
 Tambahkan variabel buttonSection ke dalam body seperti berikut:
 
 Output: 
-![](./img/prak2.png)
+![](./imgSC/prak2.png)
 
 ### Praktikum 3: Implementasi text section
 Selesaikan langkah-langkah praktikum berikut ini dengan melanjutkan dari praktikum sebelumnya.
@@ -224,7 +224,7 @@ Dengan memberi nilai softWrap = true, baris teks akan memenuhi lebar kolom sebel
 
 Langkah 2: Tambahkan variabel text section ke body
 Tambahkan widget variabel textSection ke dalam body seperti berikut:
-![](./img/prak3.png)
+![](./imgSC/prak3.png)
 
 ### Praktikum 4: Implementasi image section
 Selesaikan langkah-langkah praktikum berikut ini dengan melanjutkan dari praktikum sebelumnya.
@@ -247,7 +247,8 @@ Langkah 3: Terakhir, ubah menjadi ListView
 Pada langkah terakhir ini, atur semua elemen dalam ListView, bukan Column, karena ListView mendukung scroll yang dinamis saat aplikasi dijalankan pada perangkat yang resolusinya lebih kecil.
 
 Output:
-![](./img/prak4.png)
+![](./imgSC/prak4.png)
 ## 2. Silakan implementasikan di project baru "basic_layout_flutter" dengan mengakses sumber ini: https://docs.flutter.dev/codelabs/layout-basics
+![](./imgSC/AnsTGS1n2.png)
 
 ## 3. Kumpulkan link commit repository GitHub Anda kepada dosen yang telah disepakati!
