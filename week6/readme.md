@@ -246,6 +246,8 @@ BoxFit.cover memberi tahu kerangka kerja bahwa gambar harus sekecil mungkin teta
 Langkah 3: Terakhir, ubah menjadi ListView
 Pada langkah terakhir ini, atur semua elemen dalam ListView, bukan Column, karena ListView mendukung scroll yang dinamis saat aplikasi dijalankan pada perangkat yang resolusinya lebih kecil.
 
+Output:
+![](./img/prak4.png)
 ## 2. Silakan implementasikan di project baru "basic_layout_flutter" dengan mengakses sumber ini: https://docs.flutter.dev/codelabs/layout-basics
 
 ## 3. Kumpulkan link commit repository GitHub Anda kepada dosen yang telah disepakati!
