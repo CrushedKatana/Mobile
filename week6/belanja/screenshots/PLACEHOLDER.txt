@@ -1,0 +1,7 @@
+Screenshots placeholder. Replace with actual screenshots of:
+- grid_view.png
+- hero_transition.png
+- item_detail.png
+- footer.png
+
+Add images here and reference them in README.md under belanja/screenshots/

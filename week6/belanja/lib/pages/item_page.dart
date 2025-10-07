@@ -6,48 +6,50 @@ class ItemPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    // Menerima data dari halaman sebelumnya
-    final Item item = ModalRoute.of(context)!.settings.arguments as Item;
+    final itemArgs = ModalRoute.of(context)!.settings.arguments as Item;
 
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Detail Barang'),
-        backgroundColor: Colors.green,
+        title: Text(itemArgs.name),
+        backgroundColor: Colors.pinkAccent,
       ),
-      body: Padding(
-        padding: const EdgeInsets.all(20.0),
-        child: Card(
-          elevation: 4,
-          shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(12),
-          ),
-          child: Center(
-            child: Column(
+      body: SingleChildScrollView(
+        child: Column(
+          children: [
+            Hero(
+              tag: itemArgs.name,
+              child: Image.asset(
+                itemArgs.imagePath,
+                height: 250,
+                fit: BoxFit.cover,
+              ),
+            ),
+            const SizedBox(height: 20),
+            Text(
+              itemArgs.name,
+              style: const TextStyle(
+                fontSize: 26,
+                fontWeight: FontWeight.bold,
+              ),
+            ),
+            Text('Harga: Rp ${itemArgs.price}',
+                style: const TextStyle(fontSize: 18)),
+            Text('Stok tersedia: ${itemArgs.stock}',
+                style: const TextStyle(fontSize: 18)),
+            Row(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                Text(
-                  item.name,
-                  style: const TextStyle(
-                    fontSize: 30,
-                    fontWeight: FontWeight.bold,
-                  ),
-                ),
-                const SizedBox(height: 10),
-                Text(
-                  'Harga: Rp ${item.price}',
-                  style: const TextStyle(fontSize: 22),
-                ),
-                const SizedBox(height: 30),
-                ElevatedButton.icon(
-                  onPressed: () {
-                    Navigator.pop(context);
-                  },
-                  icon: const Icon(Icons.arrow_back),
-                  label: const Text('Kembali'),
-                )
+                const Icon(Icons.star, color: Colors.amber),
+                Text(itemArgs.rating.toString()),
               ],
             ),
-          ),
+            const SizedBox(height: 20),
+            ElevatedButton.icon(
+              onPressed: () => Navigator.pop(context),
+              icon: const Icon(Icons.arrow_back),
+              label: const Text('Kembali'),
+            ),
+          ],
         ),
       ),
     );

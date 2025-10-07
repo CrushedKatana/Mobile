@@ -295,13 +295,67 @@ Jalankan aplikasi kembali dan pastikan ListView dapat disentuh dan berpindah ke 
 
 ![](./imgSC/prak5.gif)
 
-Tugas Praktikum 2
-Untuk melakukan pengiriman data ke halaman berikutnya, cukup menambahkan informasi arguments pada penggunaan Navigator. Perbarui kode pada bagian Navigator menjadi seperti berikut.
-Navigator.pushNamed(context, '/item', arguments: item);
-Pembacaan nilai yang dikirimkan pada halaman sebelumnya dapat dilakukan menggunakan ModalRoute. Tambahkan kode berikut pada blok fungsi build dalam halaman ItemPage. Setelah nilai didapatkan, anda dapat menggunakannya seperti penggunaan variabel pada umumnya. (https://docs.flutter.dev/cookbook/navigation/navigate-with-arguments)
-final itemArgs = ModalRoute.of(context)!.settings.arguments as Item;
-Pada hasil akhir dari aplikasi belanja yang telah anda selesaikan, tambahkan atribut foto produk, stok, dan rating. Ubahlah tampilan menjadi GridView seperti di aplikasi marketplace pada umumnya.
-Silakan implementasikan Hero widget pada aplikasi belanja Anda dengan mempelajari dari sumber ini: https://docs.flutter.dev/cookbook/navigation/hero-animations
-Sesuaikan dan modifikasi tampilan sehingga menjadi aplikasi yang menarik. Selain itu, pecah widget menjadi kode yang lebih kecil. Tambahkan Nama dan NIM di footer aplikasi belanja Anda.
-Selesaikan Praktikum 5: Navigasi dan Rute tersebut. Cobalah modifikasi menggunakan plugin go_router, lalu dokumentasikan dan push ke repository Anda berupa screenshot setiap hasil pekerjaan beserta penjelasannya di file README.md. Kumpulkan link commit repository GitHub Anda kepada dosen yang telah disepakati!
+# Tugas Praktikum 2 — Jawaban dan Dokumentasi (project: `week6/belanja`)
 
+Di bawah ini adalah jawaban singkat untuk tiap soal Praktikum 2. Semua contoh kode dan file yang disebut sudah ada di project `week6/belanja` pada folder `lib`.
+
+1) Pengiriman data ke halaman berikutnya (Navigator.arguments)
+
+- Status: Done
+- Lokasi: `lib/pages/home_page.dart`
+- Penjelasan: Saat pengguna mengetuk sebuah item pada grid, aplikasi memanggil Navigator dengan named route dan menyertakan objek `Item` sebagai `arguments`:
+
+  Navigator.pushNamed(context, '/item', arguments: item);
+
+  Baris ini ada di handler `onTap` pada setiap kartu di `GridView.builder`.
+
+2) Pembacaan nilai di halaman tujuan (ModalRoute)
+
+- Status: Done
+- Lokasi: `lib/pages/item_page.dart`
+- Penjelasan: Halaman tujuan membaca objek yang dikirim dengan ModalRoute:
+
+  final itemArgs = ModalRoute.of(context)!.settings.arguments as Item;
+
+  Setelah itu `itemArgs` digunakan untuk menampilkan nama, harga, stok, rating, dan gambar.
+
+3) Tambah atribut foto, stok, dan rating; ubah tampilan menjadi GridView
+
+- Status: Done
+- Lokasi model: `lib/models/item.dart`
+- Penjelasan: Model `Item` telah diperluas dengan atribut `imagePath`, `stock`, dan `rating`:
+
+  class Item {
+    final String name;
+    final int price;
+    final String imagePath; // foto produk
+    final int stock;       // stok
+    final double rating;   // rating
+    ...
+  }
+
+- Tampilan: `lib/pages/home_page.dart` menggunakan `GridView.builder` untuk menampilkan item sebagaimana aplikasi marketplace.
+
+4) Implementasi Hero widget
+
+- Status: Done
+- Lokasi: `lib/pages/home_page.dart` dan `lib/pages/item_page.dart`
+- Penjelasan: Gambar pada grid dibungkus dengan `Hero(tag: item.name, child: ...)` dan halaman detail juga menampilkan `Hero` dengan tag yang sama sehingga menghasilkan animasi transisi saat berpindah halaman.
+
+5) Modifikasi tampilan, pemecahan widget, dan footer Nama + NIM
+
+- Status: Done
+- Lokasi: beberapa file di `lib/` (struktur proyek memisahkan model dan halaman)
+- Penjelasan: Aplikasi memecah kode menjadi `models` dan `pages`. Footer dengan Nama dan NIM ditambahkan sebagai `bottomNavigationBar` di `HomePage`:
+
+  bottomNavigationBar: const Padding(
+    padding: EdgeInsets.all(8.0),
+    child: Text(
+      'Nama: Charel Kalingga S | NIM: 2341720205',
+      textAlign: TextAlign.center,
+      style: TextStyle(color: Colors.grey),
+    ),
+  ),
+6. Selesaikan Praktikum 5: Navigasi dan Rute tersebut. Cobalah modifikasi menggunakan plugin go_router, lalu dokumentasikan dan push ke repository Anda berupa screenshot setiap hasil pekerjaan beserta penjelasannya di file README.md. Kumpulkan link commit repository GitHub Anda kepada dosen yang telah disepakati!
+
+![](./imgSC/ezgif-6c28ba43e61155.gif)
