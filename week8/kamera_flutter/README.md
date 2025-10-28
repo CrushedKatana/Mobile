@@ -1,16 +1,14 @@
-# kamera_flutter
+## Tugas Praktikum
+### 1. Selesaikan Praktikum 1 dan 2, lalu dokumentasikan dan push ke repository Anda berupa screenshot setiap hasil pekerjaan beserta penjelasannya di file README.md! Jika terdapat error atau kode yang tidak dapat berjalan, silakan Anda perbaiki sesuai tujuan aplikasi dibuat!
 
-A new Flutter project.
+##### Praktikum 1: Mengambil Foto dengan Kamera di Flutter
 
-## Getting Started
+##### Praktikum 2: Membuat photo filter carousel
 
-This project is a starting point for a Flutter application.
+### 2. Gabungkan hasil praktikum 1 dengan hasil praktikum 2 sehingga setelah melakukan pengambilan foto, dapat dibuat filter carouselnya!
 
-A few resources to get you started if this is your first Flutter project:
+### 3. Jelaskan maksud void async pada praktikum 1?
 
-- [Lab: Write your first Flutter app](https://docs.flutter.dev/get-started/codelab)
-- [Cookbook: Useful Flutter samples](https://docs.flutter.dev/cookbook)
+### 4. Jelaskan fungsi dari anotasi @immutable dan @override ?
 
-For help getting started with Flutter development, view the
-[online documentation](https://docs.flutter.dev/), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
+### 5. Kumpulkan link commit repository GitHub Anda kepada dosen yang telah disepakati!

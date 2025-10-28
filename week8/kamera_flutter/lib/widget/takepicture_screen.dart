@@ -1,7 +1,7 @@
 import 'package:camera/camera.dart';
 import 'package:flutter/material.dart';
 
-import 'displaypicture_screen.dart';
+import 'filter_carousel.dart';
 
 // A screen that allows users to take a picture using a given camera.
 class TakePictureScreen extends StatefulWidget {
@@ -77,15 +77,11 @@ class TakePictureScreenState extends State<TakePictureScreen> {
 
             if (!context.mounted) return;
 
-            // If the picture was taken, display it on a new screen.
+            // If the picture was taken, open the PhotoFilterCarousel and
+            // apply filters to the captured image.
             await Navigator.of(context).push(
               MaterialPageRoute(
-                builder: (context) => DisplayPictureScreen(
-                  // Pass the XFile to DisplayPictureScreen. On web, the file
-                  // path isn't usable so the display widget will read bytes and
-                  // show via Image.memory. On mobile, it will use Image.file.
-                  imageFile: image,
-                ),
+                builder: (context) => PhotoFilterCarousel(imageFile: image),
               ),
             );
           } catch (e) {
