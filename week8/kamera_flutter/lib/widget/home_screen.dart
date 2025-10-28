@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 
 import 'filter_carousel.dart';
 import 'takepicture_screen.dart';
+import 'task_screen.dart';
 
 class HomeScreen extends StatelessWidget {
   const HomeScreen({super.key});
@@ -11,50 +12,64 @@ class HomeScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(title: const Text('Praktikum Apps')),
-      body: Padding(
-        padding: const EdgeInsets.all(16.0),
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            ElevatedButton.icon(
-              icon: const Icon(Icons.camera_alt),
-              label: const Text('Camera (Praktikum 1)'),
-              onPressed: () async {
-                try {
-                  // Obtain available cameras at tap time.
-                  final cameras = await availableCameras();
-                  if (cameras.isEmpty) {
-                    ScaffoldMessenger.of(context).showSnackBar(
-                      const SnackBar(content: Text('No cameras available')),
+      body: Center(
+        child: Padding(
+          padding: const EdgeInsets.all(16.0),
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: [
+              ElevatedButton.icon(
+                icon: const Icon(Icons.camera_alt),
+                label: const Text('Camera (Praktikum 1)'),
+                onPressed: () async {
+                  try {
+                    final cameras = await availableCameras();
+                    if (cameras.isEmpty) {
+                      ScaffoldMessenger.of(context).showSnackBar(
+                        const SnackBar(content: Text('No cameras available')),
+                      );
+                      return;
+                    }
+                    final firstCamera = cameras.first;
+                    await Navigator.of(context).push(
+                      MaterialPageRoute(
+                        builder: (_) => TakePictureScreen(camera: firstCamera),
+                      ),
                     );
-                    return;
+                  } catch (e) {
+                    ScaffoldMessenger.of(context).showSnackBar(
+                      SnackBar(content: Text('Error initializing camera: $e')),
+                    );
                   }
-                  final firstCamera = cameras.first;
-                  await Navigator.of(context).push(
-                    MaterialPageRoute(
-                      builder: (_) => TakePictureScreen(camera: firstCamera),
-                    ),
-                  );
-                } catch (e) {
-                  ScaffoldMessenger.of(context).showSnackBar(
-                    SnackBar(content: Text('Error initializing camera: $e')),
-                  );
-                }
-              },
-            ),
+                },
+              ),
 
-            const SizedBox(height: 20),
+              const SizedBox(height: 20),
 
-            ElevatedButton.icon(
-              icon: const Icon(Icons.photo_library),
-              label: const Text('Photo Filter Carousel (Praktikum 2)'),
-              onPressed: () {
-                Navigator.of(context).push(
-                  MaterialPageRoute(builder: (_) => const PhotoFilterCarousel()),
-                );
-              },
-            ),
-          ],
+              ElevatedButton.icon(
+                icon: const Icon(Icons.photo_library),
+                label: const Text('Photo Filter Carousel (Praktikum 2)'),
+                onPressed: () {
+                  Navigator.of(context).push(
+                    MaterialPageRoute(builder: (_) => const PhotoFilterCarousel()),
+                  );
+                },
+              ),
+
+              const SizedBox(height: 20),
+
+              ElevatedButton.icon(
+                icon: const Icon(Icons.assignment),
+                label: const Text('Tugas Praktikum'),
+                onPressed: () {
+                  Navigator.of(context).push(
+                    MaterialPageRoute(builder: (_) => const TaskScreen()),
+                  );
+                },
+              ),
+            ],
+          ),
         ),
       ),
     );

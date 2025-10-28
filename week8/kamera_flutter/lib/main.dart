@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
 
-import 'widget/filter_carousel.dart';
+import 'widget/home_screen.dart';
 
 void main() {
   runApp(
     const MaterialApp(
-      home: PhotoFilterCarousel(),
+      home: HomeScreen(),
       debugShowCheckedModeBanner: false,
     ),
   );
