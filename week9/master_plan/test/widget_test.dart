@@ -5,24 +5,21 @@
 // gestures. You can also use WidgetTester to find child widgets in the widget
 // tree, read text, and verify that the values of widget properties are correct.
 
-import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 
 import 'package:master_plan/main.dart';
 
 void main() {
-  testWidgets('Counter increments smoke test', (WidgetTester tester) async {
-  // Build the MasterPlan app and trigger a frame.
-  await tester.pumpWidget(const MasterPlanApp());
+  testWidgets('Master Plan selector smoke test', (WidgetTester tester) async {
+    // Build the MasterPlan app and trigger a frame.
+    await tester.pumpWidget(const MasterPlanApp());
 
-  // There should be an add button (FloatingActionButton).
-  expect(find.byIcon(Icons.add), findsOneWidget);
-
-  // Tap the add button to create a new empty task and rebuild.
-  await tester.tap(find.byIcon(Icons.add));
-  await tester.pump();
-
-  // After adding, a TextFormField (for task description) should be present.
-  expect(find.byType(TextFormField), findsWidgets);
+    // Verify the selector screen is displayed.
+    expect(find.text('Pilih Praktikum'), findsOneWidget);
+    
+    // Verify all three praktikum buttons are present.
+    expect(find.text('Praktikum 1'), findsOneWidget);
+    expect(find.text('Praktikum 2'), findsOneWidget);
+    expect(find.text('Praktikum 3'), findsOneWidget);
   });
 }
