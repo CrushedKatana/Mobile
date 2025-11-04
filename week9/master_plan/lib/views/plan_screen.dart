@@ -38,7 +38,10 @@ class _PlanScreenState extends State<PlanScreen> {
       body: ValueListenableBuilder<List<Plan>>(
         valueListenable: plansNotifier,
         builder: (context, plans, child) {
-          Plan currentPlan = plans.firstWhere((p) => p.name == plan.name);
+          Plan currentPlan = plans.firstWhere(
+            (p) => p.name == plan.name,
+            orElse: () => plan,
+          );
           return Column(
             children: [
               Expanded(child: _buildList(currentPlan)),
@@ -56,16 +59,18 @@ class _PlanScreenState extends State<PlanScreen> {
     return FloatingActionButton(
       child: const Icon(Icons.add),
       onPressed: () {
-        Plan currentPlan = plan;
         int planIndex =
-            planNotifier.value.indexWhere((p) => p.name == currentPlan.name);
-        List<Task> updatedTasks = List<Task>.from(currentPlan.tasks)
-          ..add(const Task());
-        planNotifier.value = List<Plan>.from(planNotifier.value)
-          ..[planIndex] = Plan(
-            name: currentPlan.name,
-            tasks: updatedTasks,
-          );
+            planNotifier.value.indexWhere((p) => p.name == plan.name);
+        if (planIndex != -1) {
+          Plan currentPlan = planNotifier.value[planIndex];
+          List<Task> updatedTasks = List<Task>.from(currentPlan.tasks)
+            ..add(const Task());
+          planNotifier.value = List<Plan>.from(planNotifier.value)
+            ..[planIndex] = Plan(
+              name: currentPlan.name,
+              tasks: updatedTasks,
+            );
+        }
       },
     );
   }
@@ -88,34 +93,38 @@ class _PlanScreenState extends State<PlanScreen> {
       leading: Checkbox(
         value: task.complete,
         onChanged: (selected) {
-          Plan currentPlan = plan;
           int planIndex = planNotifier.value
-              .indexWhere((p) => p.name == currentPlan.name);
-          planNotifier.value = List<Plan>.from(planNotifier.value)
-            ..[planIndex] = Plan(
-              name: currentPlan.name,
-              tasks: List<Task>.from(currentPlan.tasks)
-                ..[index] = Task(
-                  description: task.description,
-                  complete: selected ?? false,
-                ),
-            );
+              .indexWhere((p) => p.name == plan.name);
+          if (planIndex != -1) {
+            Plan currentPlan = planNotifier.value[planIndex];
+            planNotifier.value = List<Plan>.from(planNotifier.value)
+              ..[planIndex] = Plan(
+                name: currentPlan.name,
+                tasks: List<Task>.from(currentPlan.tasks)
+                  ..[index] = Task(
+                    description: task.description,
+                    complete: selected ?? false,
+                  ),
+              );
+          }
         }),
       title: TextFormField(
         initialValue: task.description,
         onChanged: (text) {
-          Plan currentPlan = plan;
           int planIndex =
-              planNotifier.value.indexWhere((p) => p.name == currentPlan.name);
-          planNotifier.value = List<Plan>.from(planNotifier.value)
-            ..[planIndex] = Plan(
-              name: currentPlan.name,
-              tasks: List<Task>.from(currentPlan.tasks)
-                ..[index] = Task(
-                  description: text,
-                  complete: task.complete,
-                ),
-            );
+              planNotifier.value.indexWhere((p) => p.name == plan.name);
+          if (planIndex != -1) {
+            Plan currentPlan = planNotifier.value[planIndex];
+            planNotifier.value = List<Plan>.from(planNotifier.value)
+              ..[planIndex] = Plan(
+                name: currentPlan.name,
+                tasks: List<Task>.from(currentPlan.tasks)
+                  ..[index] = Task(
+                    description: text,
+                    complete: task.complete,
+                  ),
+              );
+          }
         },
       ),
     );

@@ -52,50 +52,54 @@ setState(() {
 ```
 
 ## 4. Lakukan capture hasil dari Langkah 9 berupa GIF, kemudian jelaskan apa yang telah Anda buat!
-Untuk Langkah 9 saya membuat antarmuka daftar tugas sederhana (to-do) bernama "Master Plan". Pada GIF hasil capture, tampilkan minimal alur berikut:
 
-- Menekan tombol tambah (FloatingActionButton) untuk menambahkan tugas baru.
-- Mengisi teks pada `TextFormField` untuk mengubah deskripsi tugas.
-- Menandai/men-uncheck `Checkbox` untuk menandai tugas selesai/belum selesai.
-- Scroll daftar ketika sudah banyak item, dan perlihatkan bagaimana keyboard hilang saat melakukan drag (untuk platform iOS behavior keyboard dismiss on drag).
-
-Komponen utama yang dibuat:
-
-- `Plan` (model): menyimpan `name` dan `tasks` (List<Task>).
-- `Task` (model): menyimpan `description` (String) dan `complete` (bool).
-- `PlanScreen` (view): StatefulWidget yang menampilkan `ListView.builder` berisi `ListTile` untuk setiap tugas, `TextFormField` untuk edit deskripsi, dan `Checkbox` untuk menandai selesai.
-- `FloatingActionButton` menambahkan `Task` baru ke `plan.tasks`.
-- `ScrollController` yang ditambahkan untuk menghapus fokus (menyembunyikan keyboard) saat pengguna melakukan scroll.
-
-Hal-hal yang perlu dicapture di GIF (saran urutan):
-
-1. Tampilan awal aplikasi (kosong atau dengan beberapa tugas jika sudah ditambahkan).
-2. Tekan tombol tambah → sebuah entry/field baru muncul.
-3. Ketik deskripsi tugas baru, lalu tap di luar atau scroll untuk melihat keyboard menghilang.
-4. Tandai tugas selesai dengan checkbox — perhatikan perubahan state.
-5. Tambahkan beberapa tugas sehingga muncul scroll bar dan scroll ke bawah; tunjukkan bahwa keyboard dismiss berfungsi saat drag (iOS).
-
-Cara menyimpan dan memasukkan GIF ke README (Windows):
-
-- Rekomendasi alat: ScreenToGif (Windows) — rekam area emulator atau perangkat. Simpan sebagai `praktikum1.gif`.
-- Alternatif: rekam video menggunakan emulator Android (ADB: `adb shell screenrecord`) lalu konversi ke GIF dengan `ffmpeg`.
-
-Penempatan file dan penyematan ke `README.md`:
-
-1. Letakkan GIF di folder repo, misalnya `assets/praktikum1.gif` atau `media/praktikum1.gif`.
-2. Tambahkan baris Markdown di README untuk menampilkan GIF:
-
-```markdown
-![Demo Master Plan](assets/praktikum1.gif)
-```
-
-Catatan teknis singkat tentang apa yang Anda lihat saat menjalankan aplikasi:
-
-- Menambah tugas: pada `onPressed` FAB, kode membuat instance `Plan` baru dengan `tasks: List<Task>.from(plan.tasks)..add(const Task())`. Ini membuat instance `Task` baru (kosong) dan menambahkan ke daftar.
-- Mengedit deskripsi: `TextFormField` memanggil `onChanged` yang mengganti instance pada index tertentu dengan `Task(description: text, complete: task.complete)`, lalu `setState` sehingga UI terupdate.
-- Toggle complete: sama pola immutability — mengganti elemen list dengan instance `Task` baru dengan properti `complete` diubah.
+![](./IMG/job%209%201.gif)
 
 ## 5. Apa kegunaan method pada Langkah 11 dan 13 dalam lifecyle state ?
+
+**Langkah 11 - Method `initState()`:**
+
+Method `initState()` dipanggil sekali saat widget pertama kali dibuat dan dimasukkan ke dalam widget tree. Pada praktikum ini, `initState()` digunakan untuk:
+
+```dart
+@override
+void initState() {
+  super.initState();
+  scrollController = ScrollController()
+    ..addListener(() {
+      FocusScope.of(context).requestFocus(FocusNode());
+    });
+}
+```
+
+Kegunaan:
+- Menginisialisasi `ScrollController` yang akan digunakan untuk mengontrol `ListView`.
+- Menambahkan listener pada `ScrollController` yang akan memanggil `FocusScope.of(context).requestFocus(FocusNode())` setiap kali terjadi event scroll.
+- Fungsi listener ini membuat keyboard otomatis disembunyikan ketika user melakukan scroll, meningkatkan UX terutama pada iOS.
+- `initState()` adalah tempat yang tepat untuk inisialisasi objek yang memerlukan `BuildContext` atau resource yang perlu di-setup sebelum widget di-render.
+
+**Langkah 13 - Method `dispose()`:**
+
+Method `dispose()` dipanggil saat widget dihapus secara permanen dari widget tree. Pada praktikum ini, `dispose()` digunakan untuk:
+
+```dart
+@override
+void dispose() {
+  scrollController.dispose();
+  super.dispose();
+}
+```
+
+Kegunaan:
+- Membersihkan resource yang digunakan oleh widget, khususnya `ScrollController`.
+- Mencegah memory leak dengan memastikan objek yang memiliki listener atau resource native (seperti controller) di-dispose dengan benar.
+- `dispose()` dipanggil sebelum widget benar-benar dihapus, memberi kesempatan untuk cleanup.
+- Penting untuk selalu memanggil `dispose()` pada controller, animation, stream subscription, dll untuk menghindari memory leak.
+
+Lifecycle state secara singkat:
+1. `initState()` → setup/inisialisasi
+2. `build()` → render UI (bisa dipanggil berulang kali)
+3. `dispose()` → cleanup/pembersihan
 
 ## 6. Kumpulkan laporan praktikum Anda berupa link commit atau repository GitHub ke dosen yang telah disepakati !
 
@@ -106,9 +110,79 @@ Catatan teknis singkat tentang apa yang Anda lihat saat menjalankan aplikasi:
 
 ## 2. Jelaskan mana yang dimaksud InheritedWidget pada langkah 1 tersebut! Mengapa yang digunakan InheritedNotifier?
 
+Pada Langkah 1, yang dimaksud `InheritedWidget` adalah class `PlanProvider` yang extends `InheritedNotifier<ValueNotifier<Plan>>`:
+
+```dart
+class PlanProvider extends InheritedNotifier<ValueNotifier<Plan>> {
+  const PlanProvider({super.key, required Widget child, required
+   ValueNotifier<Plan> notifier})
+  : super(child: child, notifier: notifier);
+
+  static ValueNotifier<Plan> of(BuildContext context) {
+   return context.
+    dependOnInheritedWidgetOfExactType<PlanProvider>()!.notifier!;
+  }
+}
+```
+
+**Mengapa menggunakan `InheritedNotifier` bukan `InheritedWidget` biasa?**
+
+1. **Automatic Rebuild**: `InheritedNotifier` secara otomatis akan memberi tahu widget-widget turunannya untuk rebuild ketika `ValueNotifier` berubah. Dengan `InheritedWidget` biasa, kita harus implement logika `updateShouldNotify()` secara manual.
+
+2. **Integration dengan Listenable**: `InheritedNotifier` dirancang khusus untuk bekerja dengan objek yang implements `Listenable` (seperti `ValueNotifier`, `ChangeNotifier`). Ini membuat pattern reaktif lebih mudah diimplementasikan.
+
+3. **Cleaner Code**: Dengan `ValueNotifier`, kita bisa langsung mengubah nilai dengan `notifier.value = newValue` dan semua widget yang listening akan otomatis rebuild, tanpa perlu manage listener secara manual.
+
+4. **Better Performance**: `InheritedNotifier` hanya akan rebuild widget yang benar-benar depend pada notifier tersebut, bukan seluruh subtree.
+
+Jadi, `InheritedNotifier` adalah pilihan yang lebih praktis dan efisien untuk state management yang reaktif dibanding `InheritedWidget` biasa.
+
 ## 3. Jelaskan maksud dari method di langkah 3 pada praktikum tersebut! Mengapa dilakukan demikian?
 
+Pada Langkah 3, dua method getter ditambahkan ke class `Plan`:
+
+```dart
+int get completedCount => tasks
+  .where((task) => task.complete)
+  .length;
+
+String get completenessMessage =>
+  '$completedCount out of ${tasks.length} tasks';
+```
+
+**Maksud dan Kegunaan:**
+
+1. **`completedCount` getter**:
+   - Menghitung jumlah tugas yang sudah selesai (complete = true)
+   - Menggunakan method `where()` untuk memfilter hanya task yang complete
+   - Mengembalikan panjang (length) dari hasil filter tersebut
+
+2. **`completenessMessage` getter**:
+   - Membuat string informatif yang menampilkan progress: "X out of Y tasks"
+   - Menggunakan `completedCount` yang sudah dihitung di atas
+   - Memberikan informasi yang user-friendly tentang berapa banyak tugas yang telah diselesaikan
+
+**Mengapa dilakukan demikian?**
+
+1. **Separation of Concerns**: Logika perhitungan diletakkan di model (Plan) bukan di UI. Ini membuat kode lebih terorganisir dan mudah di-maintain.
+
+2. **Reusability**: Getter ini bisa digunakan di berbagai tempat dalam aplikasi tanpa duplikasi kode perhitungan.
+
+3. **Computed Property**: Nilai dihitung secara dinamis berdasarkan state saat ini, sehingga selalu up-to-date tanpa perlu manual update.
+
+4. **Encapsulation**: Detail implementasi bagaimana menghitung task yang selesai disembunyikan dari luar. UI hanya perlu memanggil getter tanpa tahu cara kerjanya.
+
+5. **Maintainability**: Jika logika perhitungan perlu diubah (misal menambah kriteria lain), cukup edit di satu tempat (model) tanpa menyentuh UI.
+
+Contoh penggunaan di UI (Langkah 9):
+```dart
+SafeArea(child: Text(plan.completenessMessage))
+```
+
+Dengan pendekatan ini, UI tetap bersih dan fokus pada presentasi, sementara logika bisnis ada di model.
+
 ## 4. Lakukan capture hasil dari Langkah 9 berupa GIF, kemudian jelaskan apa yang telah Anda buat!
+![](./IMG/job%209%202.gif)
 
 ## 5. Kumpulkan laporan praktikum Anda berupa link commit atau repository GitHub ke dosen yang telah disepakati !
 
@@ -120,7 +194,13 @@ Catatan teknis singkat tentang apa yang Anda lihat saat menjalankan aplikasi:
 
 ## 2. Berdasarkan Praktikum 3 yang telah Anda lakukan, jelaskan maksud dari gambar diagram berikut ini!
 
+![](./IMG/image.png)
+
+Diagram tersebut menjelaskan proses navigasi dan perubahan widget tree dalam aplikasi Flutter. Yang awalnya pohon Widget Awal (Blok Biru) ke Aksi "Navigator Push"
+
 ## 3. Lakukan capture hasil dari Langkah 14 berupa GIF, kemudian jelaskan apa yang telah Anda buat!
+![](./IMG/job%209%203.gif)
 
 ## 4. Kumpulkan laporan praktikum Anda berupa link commit atau repository GitHub ke dosen yang telah disepakati !
+
 
