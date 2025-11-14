@@ -30,11 +30,11 @@ dependencies:
 ### Langkah 3: Buka file main.dart
 
 #### Soal 1
-✅ Nama panggilan "Katana" telah ditambahkan pada title app sebagai identitas hasil pekerjaan.
+
 
 ```dart
 return MaterialApp(
-  title: 'Back to Future - Katana',
+  title: 'Back from the Future - Charel',
   theme: ThemeData(
     primarySwatch: Colors.blue,
     visualDensity: VisualDensity.adaptivePlatformDensity,
@@ -58,7 +58,7 @@ https://www.googleapis.com/books/v1/volumes/TBnWDwAAQBAJ
 
 **Screenshot JSON Response:**
 
-![JSON Response](screenshots/json_response.png)
+![](./screenshots/image.png)
 
 *Catatan: Silakan akses URL di atas di browser untuk melihat response JSON lengkap dari Google Books API*
 
@@ -109,34 +109,5 @@ ElevatedButton(
 
 **Hasil Praktikum:**
 
-![Demo GIF](screenshots/demo.gif)
+![](./screenshots/image1.png)
 
-*Catatan: Silakan jalankan aplikasi dengan `flutter run` untuk melihat hasilnya*
-
----
-
-## Kesimpulan
-
-Praktikum ini berhasil mendemonstrasikan:
-1. ✅ Cara menambahkan dependency http ke project Flutter
-2. ✅ Cara menggunakan API Google Books untuk mengambil data buku
-3. ✅ Implementasi async/await untuk operasi asynchronous
-4. ✅ Handling error dengan catchError()
-5. ✅ Manipulasi string dengan substring()
-6. ✅ Update UI dengan setState()
-
----
-
-## Cara Menjalankan Aplikasi
-
-1. Clone repository ini
-2. Buka terminal dan navigasi ke folder project
-3. Jalankan `flutter pub get` untuk menginstall dependencies
-4. Jalankan `flutter run` untuk menjalankan aplikasi
-5. Tekan tombol "GO!" untuk mengambil data dari Google Books API
-
----
-
-**Commit Messages:**
-- ✅ W11: Soal 2 - Added book API integration
-- ✅ W11: Soal 3 - Completed HTTP request implementation
