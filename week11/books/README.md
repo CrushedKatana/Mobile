@@ -276,3 +276,70 @@ Aplikasi akan menampilkan angka 42 setelah delay 5 detik.
 
 ![](./screenshots/image3.png)
 
+### Langkah 5: Ganti dengan method calculate
+**Note:** Langkah ini sudah terimplementasi di Langkah 2.
+
+### Langkah 6: Pindah ke onPressed()
+Ganti kode `onPressed()` dengan menambahkan error handling menggunakan `catchError()`:
+
+```dart
+ElevatedButton(
+  child: const Text('GO!'),
+  onPressed: () {
+    getNumber().then((value) {
+      setState(() {
+        result = value.toString();
+      });
+    }).catchError((e) {
+      result = 'An error occurred';
+    });
+  },
+),
+```
+
+#### Soal 6
+
+**Jelaskan maksud perbedaan kode langkah 2 dengan langkah 5-6:**
+
+**Perbedaan Utama:**
+
+**Langkah 2 (Method calculate):**
+```dart
+Future calculate() async {
+  await Future.delayed(const Duration(seconds: 5));
+  completer.complete(42);
+}
+```
+- Method `calculate()` hanya menyelesaikan Future dengan **sukses** menggunakan `completer.complete(42)`
+- Tidak ada penanganan error di dalam method ini
+- Future selalu diselesaikan dengan nilai 42 setelah 5 detik
+
+**Langkah 5-6 (onPressed dengan catchError):**
+```dart
+getNumber().then((value) {
+  setState(() {
+    result = value.toString();
+  });
+}).catchError((e) {
+  result = 'An error occurred';
+});
+```
+- Menambahkan **error handling** dengan method `catchError()`
+- Jika terjadi error saat eksekusi Future (misalnya: exception di `calculate()`, timeout, atau error lainnya), maka `catchError()` akan menangkapnya
+- Memberikan feedback kepada user dengan menampilkan pesan error "An error occurred"
+- Membuat aplikasi lebih **robust** dan **user-friendly** karena siap menangani kegagalan
+
+**Kesimpulan Perbedaan:**
+1. **Langkah 2** fokus pada **logika bisnis** (bagaimana Future diselesaikan)
+2. **Langkah 5-6** fokus pada **error handling** (bagaimana menangani jika Future gagal)
+3. Langkah 6 menambahkan layer **defensive programming** untuk mencegah aplikasi crash saat terjadi error
+4. Dengan `catchError()`, kita memastikan bahwa apapun yang terjadi (sukses atau error), UI tetap akan diupdate dengan informasi yang sesuai
+
+**Best Practice:**
+- Selalu tambahkan `catchError()` atau `try-catch` pada operasi asynchronous
+- Berikan feedback yang jelas kepada user saat terjadi error
+- Hindari aplikasi crash dengan menangani semua kemungkinan error
+
+**Hasil Praktikum:**
+
+![W11: Soal 6](./screenshots/soal6.gif)
