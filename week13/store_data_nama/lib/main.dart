@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'dart:convert';
+import 'model/pizza.dart';
 
 void main() {
   runApp(const MyApp());
@@ -42,20 +43,34 @@ class MyHomePage extends StatefulWidget {
 }
 
 class _MyHomePageState extends State<MyHomePage> {
-  String pizzaString = '';
+  List<Pizza> myPizzas = [];
 
-  Future<void> readJsonFile() async {
+  Future<List<Pizza>> readJsonFile() async {
     final String response =
         await rootBundle.loadString('assets/pizzalist.json');
-    setState(() {
-      pizzaString = response;
-    });
+    final data = jsonDecode(response);
+    List pizzaMapList = data;
+    List<Pizza> myPizzas = pizzaMapList.map((pizzaMap) {
+      return Pizza.fromJson(pizzaMap);
+    }).toList();
+    
+    String json = convertToJSON(myPizzas);
+    print(json);
+    return myPizzas;
+  }
+
+  String convertToJSON(List<Pizza> pizzas) {
+    return jsonEncode(pizzas.map((pizza) => pizza.toJson()).toList());
   }
 
   @override
   void initState() {
     super.initState();
-    readJsonFile();
+    readJsonFile().then((value) {
+      setState(() {
+        myPizzas = value;
+      });
+    });
   }
 
   @override
@@ -65,10 +80,14 @@ class _MyHomePageState extends State<MyHomePage> {
         backgroundColor: Theme.of(context).colorScheme.inversePrimary,
         title: Text(widget.title),
       ),
-      body: ListView(
-        children: [
-          Text(pizzaString),
-        ],
+      body: ListView.builder(
+        itemCount: myPizzas.length,
+        itemBuilder: (context, index) {
+          return ListTile(
+            title: Text(myPizzas[index].pizzaName),
+            subtitle: Text(myPizzas[index].description),
+          );
+        },
       ),
     );
   }
