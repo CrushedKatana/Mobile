@@ -932,6 +932,90 @@ Temporary: /data/user/0/com.example.store_data_nama/cache
 
 ---
 
+## Praktikum 6: Akses filesystem dengan direktori
+
+### Soal 8
+**Pertanyaan**: Jelaskan maksud kode pada langkah 3 dan 7!
+
+**Jawaban**:
+
+#### **Penjelasan Langkah 3 - Method writeFile()**:
+
+```dart
+Future<bool> writeFile() async {
+  try {
+    await myFile.writeAsString('Charel - 2241760083');
+    return true;
+  } catch (e) {
+    return false;
+  }
+}
+```
+
+**Maksud kode**:
+- **Fungsi**: Method async yang menulis data string ke file di sistem
+- **Return Type**: `Future<bool>` mengembalikan true jika berhasil, false jika gagal
+- **writeAsString()**: Method dari class File yang menulis string ke file
+- **await**: Menunggu operasi penulisan file selesai (asynchronous I/O operation)
+- **try-catch**: Error handling untuk menangani kegagalan penulisan file (misal: permission denied, disk full)
+- **Content**: String 'Charel - 2241760083' adalah data yang ditulis (nama dan NIM)
+
+**Proses yang terjadi**:
+1. Method dipanggil setelah myFile diinisialisasi dengan path lengkap
+2. Sistem menulis string ke file di lokasi `documentsPath/pizzas.txt`
+3. Jika berhasil return true, jika error return false
+4. File akan dibuat otomatis jika belum ada, atau overwrite jika sudah ada
+
+---
+
+#### **Penjelasan Langkah 7 - UI dengan Read File Button**:
+
+**UI Components yang ditambahkan**:
+
+```dart
+ElevatedButton(
+  onPressed: readFile,
+  style: ElevatedButton.styleFrom(
+    backgroundColor: Colors.teal,
+    foregroundColor: Colors.white,
+  ),
+  child: const Text('Read File'),
+),
+const SizedBox(height: 8),
+Text(
+  fileText,
+  style: const TextStyle(
+    fontSize: 16,
+    fontWeight: FontWeight.bold,
+    color: Colors.teal,
+  ),
+),
+```
+
+**Maksud kode**:
+1. **ElevatedButton**: 
+   - **onPressed**: Memanggil method `readFile()` saat tombol ditekan
+   - **style**: Custom styling dengan warna teal untuk konsistensi tema
+   - **child**: Label tombol "Read File"
+
+2. **Text Widget**:
+   - Menampilkan isi variabel `fileText` yang diupdate oleh `readFile()`
+   - Style dengan bold dan warna teal untuk highlight
+   - Akan menampilkan "Charel - 2241760083" setelah tombol ditekan
+
+**Alur Kerja**:
+1. User menekan tombol "Read File"
+2. Method `readFile()` dipanggil
+3. File dibaca menggunakan `myFile.readAsString()`
+4. Content file disimpan ke variabel `fileText` via `setState()`
+5. UI otomatis re-render dan menampilkan content file di Text widget
+
+**Screenshot**: (Jalankan aplikasi dan tekan tombol "Read File" untuk melihat hasilnya)
+
+**Commit**: W13: Jawaban Soal 8
+
+---
+
 ## Kesimpulan
 
 ### Praktikum 1 - Deserialization & Serialization:
@@ -974,6 +1058,14 @@ Temporary: /data/user/0/com.example.store_data_nama/cache
 5. **Cross-Platform Support**: Bekerja di Android, iOS, Web, Windows, macOS, Linux
 6. **Directory Object**: Objek Directory untuk operasi file/folder lanjutan
 
+### Praktikum 6 - File Operations dengan dart:io:
+1. **File Class**: Menggunakan class File dari dart:io untuk operasi file
+2. **writeAsString()**: Menulis data string ke file secara asynchronous
+3. **readAsString()**: Membaca content file sebagai string
+4. **File Path**: Kombinasi directory path dan filename untuk lokasi file lengkap
+5. **Error Handling**: Try-catch untuk menangani error I/O operations
+6. **Persistent Data**: File tetap ada meskipun aplikasi ditutup (berbeda dengan state)
+
 **Best Practices yang Dipelajari**:
 - Selalu validasi data dari sumber eksternal (API, file JSON)
 - Berikan nilai default yang meaningful untuk data yang hilang atau invalid
@@ -989,12 +1081,17 @@ Temporary: /data/user/0/com.example.store_data_nama/cache
 - Pilih direktori yang tepat sesuai dengan jenis data (Documents vs Temporary)
 - Selalu handle error saat akses file system
 - Clean up temporary files secara berkala
+- Gunakan File class dari dart:io untuk operasi read/write file
+- Implement try-catch untuk semua file I/O operations
+- Gunakan writeAsString() untuk data text, writeAsBytes() untuk binary data
+- File operations bersifat asynchronous, pastikan menggunakan await
+- Combine path_provider dengan dart:io untuk file management lengkap
 
 ## Struktur Project
 
 ```
 lib/
-├── main.dart           # Main application dengan error handling, SharedPreferences, dan path_provider
+├── main.dart           # Main application dengan semua fitur Praktikum 1-6
 └── model/
     └── pizza.dart      # Pizza model dengan robust fromJson() dan toJson()
 

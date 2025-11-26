@@ -50,6 +50,8 @@ class _MyHomePageState extends State<MyHomePage> {
   int appCounter = 0;
   String documentsPath = '';
   String tempPath = '';
+  late File myFile;
+  String fileText = '';
 
   Future<List<Pizza>> readJsonFile() async {
     final String response =
@@ -96,11 +98,36 @@ class _MyHomePageState extends State<MyHomePage> {
     });
   }
 
+  Future<bool> writeFile() async {
+    try {
+      await myFile.writeAsString('Charel - 2241760083');
+      return true;
+    } catch (e) {
+      return false;
+    }
+  }
+
+  Future<void> readFile() async {
+    try {
+      String fileContent = await myFile.readAsString();
+      setState(() {
+        fileText = fileContent;
+      });
+    } catch (e) {
+      setState(() {
+        fileText = 'Error reading file: $e';
+      });
+    }
+  }
+
   @override
   void initState() {
     super.initState();
     readAndWritePreference();
-    getPaths();
+    getPaths().then((_) {
+      myFile = File('$documentsPath/pizzas.txt');
+      writeFile();
+    });
     readJsonFile().then((value) {
       setState(() {
         myPizzas = value;
@@ -193,6 +220,24 @@ class _MyHomePageState extends State<MyHomePage> {
                       ),
                     ),
                   ],
+                ),
+                const SizedBox(height: 10),
+                ElevatedButton(
+                  onPressed: readFile,
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: Colors.teal,
+                    foregroundColor: Colors.white,
+                  ),
+                  child: const Text('Read File'),
+                ),
+                const SizedBox(height: 8),
+                Text(
+                  fileText,
+                  style: const TextStyle(
+                    fontSize: 16,
+                    fontWeight: FontWeight.bold,
+                    color: Colors.teal,
+                  ),
                 ),
                 const SizedBox(height: 10),
               ],
