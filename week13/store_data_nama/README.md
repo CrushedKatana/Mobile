@@ -137,3 +137,185 @@ assets/
 - dart:convert (built-in)
 - flutter/services.dart (untuk rootBundle)
 
+---
+
+## Praktikum 2: Handle kompatibilitas data JSON
+
+### Soal 4
+**Pertanyaan**: Capture hasil running aplikasi Anda, kemudian impor ke laporan praktikum Anda!
+
+**Jawaban**:
+Pada Praktikum 2, aplikasi telah ditingkatkan untuk menangani data JSON yang tidak konsisten atau "rusak" dengan baik.
+
+**Masalah yang Ditangani**:
+
+1. **Tipe Data Tidak Konsisten**:
+   - ID bisa berupa String (`"1"`) atau int (`1`)
+   - Price bisa berupa String (`"7.50"`) atau double (`7.50`)
+
+2. **Nilai Null atau Missing Field**:
+   - Beberapa field mungkin null (seperti `pizzaName`, `description`, `imageUrl`)
+   - Beberapa field mungkin tidak ada dalam JSON
+
+3. **Tipe Data Salah**:
+   - pizzaName bisa berupa number (12345) padahal seharusnya String
+
+**Implementasi Solusi**:
+
+**1. Update Pizza.fromJson() dengan Error Handling**:
+```dart
+factory Pizza.fromJson(Map<String, dynamic> json) {
+  return Pizza(
+    id: int.tryParse(json['id']?.toString() ?? '0') ?? 0,
+    pizzaName: (json['pizzaName'] ?? 'No name').toString(),
+    description: (json['description'] ?? '').toString(),
+    price: double.tryParse(json['price']?.toString() ?? '0') ?? 0,
+    imageUrl: (json['imageUrl'] ?? '').toString(),
+  );
+}
+```
+
+**Penjelasan**:
+- **`int.tryParse()`**: Mencoba parsing String ke int, return null jika gagal
+- **`double.tryParse()`**: Mencoba parsing String ke double, return null jika gagal
+- **`?.toString()`**: Safe navigation operator, konversi ke String jika tidak null
+- **`?? defaultValue`**: Null coalescing, berikan nilai default jika null
+- **`toString()`**: Pastikan semua nilai String benar-benar String
+
+**2. Update ListView dengan Ternary Operator**:
+```dart
+ListView.builder(
+  itemCount: myPizzas.length,
+  itemBuilder: (context, index) {
+    return ListTile(
+      leading: CircleAvatar(
+        child: Text('${index + 1}'),
+      ),
+      title: Text(
+        myPizzas[index].pizzaName.isNotEmpty
+            ? myPizzas[index].pizzaName
+            : 'No name',
+      ),
+      subtitle: Text(
+        myPizzas[index].description.isNotEmpty
+            ? myPizzas[index].description
+            : 'No description',
+      ),
+      trailing: Text(
+        '\$${myPizzas[index].price.toStringAsFixed(2)}',
+        style: const TextStyle(
+          fontWeight: FontWeight.bold,
+          color: Colors.teal,
+        ),
+      ),
+    );
+  },
+)
+```
+
+**Penjelasan**:
+- Menggunakan **ternary operator** (`condition ? true : false`) untuk menampilkan nilai default
+- Jika `pizzaName` kosong → tampilkan "No name"
+- Jika `description` kosong → tampilkan "No description"
+- Price selalu ditampilkan dengan format 2 desimal
+
+**3. Data JSON yang Tidak Konsisten (pizzalist_broken.json)**:
+```json
+[
+  { 
+    "id": "1",              // String instead of int
+    "pizzaName": "Margherita",
+    "description": "Pizza with tomato, fresh mozzarella and basil",
+    "price": 8.75,
+    "imageUrl": "images/margherita.png"
+  },
+  { 
+    "id": 2,
+    "pizzaName": "Marinara",
+    "price": "7.50",        // String instead of double
+    "imageUrl": "images/marinara.png"
+    // Missing description
+  },
+  { 
+    "id": "3",
+    "pizzaName": null,      // Null value
+    "description": "Pizza with tomato, garlic and anchovies",
+    "price": 9.50
+    // Missing imageUrl
+  },
+  { 
+    "id": 4,
+    "description": "Pizza with tomato, fresh mozzarella and artichokes",
+    "price": "8.80",
+    "imageUrl": "images/marinara.png"
+    // Missing pizzaName
+  },
+  { 
+    "id": "5",
+    "pizzaName": 12345,     // Number instead of String
+    "description": null,    // Null value
+    "price": "12.50",
+    "imageUrl": null        // Null value
+  }
+]
+```
+
+**Hasil yang ditampilkan**:
+- Aplikasi berjalan tanpa error meskipun data tidak konsisten
+- Semua field yang null atau missing ditangani dengan graceful degradation
+- UI menampilkan nilai default yang user-friendly:
+  - "No name" untuk pizzaName yang null/missing
+  - "No description" untuk description yang null/missing
+  - "\$0.00" untuk price yang gagal di-parse
+- FloatingActionButton dengan icon kamera memudahkan proses screenshot
+
+**Screenshot**: _(Klik tombol kamera untuk memudahkan screenshot)_
+
+**Output Console** (JSON Serialization):
+Aplikasi masih bisa mengkonversi kembali objek Pizza ke JSON string dengan benar:
+```json
+[{"id":1,"pizzaName":"Margherita","description":"Pizza with tomato, fresh mozzarella and basil","price":8.75,"imageUrl":"images/margherita.png"},{"id":2,"pizzaName":"Marinara","description":"No description","price":7.5,"imageUrl":"images/marinara.png"},{"id":3,"pizzaName":"No name","description":"Pizza with tomato, garlic and anchovies","price":9.5,"imageUrl":""},{"id":4,"pizzaName":"No name","description":"Pizza with tomato, fresh mozzarella and artichokes","price":8.8,"imageUrl":"images/marinara.png"},{"id":5,"pizzaName":"12345","description":"","price":12.5,"imageUrl":""}]
+```
+
+**Commit**: W13: Jawaban Soal 4
+
+---
+
+## Kesimpulan
+
+### Praktikum 1 - Deserialization & Serialization:
+1. **Deserialization**: Konversi JSON → Dart Object menggunakan `fromJson()`
+2. **Serialization**: Konversi Dart Object → JSON menggunakan `toJson()`
+3. **Penggunaan `dart:convert`**: Untuk `jsonDecode()` dan `jsonEncode()`
+4. **Async programming**: Menggunakan `Future`, `async/await`, dan `.then()`
+5. **State management**: Update state dengan data dari async operation
+6. **ListView.builder**: Menampilkan list data secara efisien
+
+### Praktikum 2 - Error Handling & Data Validation:
+1. **Type Safety**: Menggunakan `tryParse()` untuk konversi tipe data yang aman
+2. **Null Safety**: Menggunakan null coalescing operator (`??`) untuk handle null values
+3. **Safe Navigation**: Menggunakan `?.` operator untuk akses property yang mungkin null
+4. **Type Conversion**: Menggunakan `toString()` untuk memastikan tipe data String
+5. **User-Friendly UI**: Menggunakan ternary operator untuk tampilan yang lebih baik
+6. **Graceful Degradation**: Aplikasi tetap berjalan meskipun data tidak sempurna
+
+**Best Practices yang Dipelajari**:
+- Selalu validasi data dari sumber eksternal (API, file JSON)
+- Berikan nilai default yang meaningful untuk data yang hilang atau invalid
+- Gunakan type-safe parsing methods seperti `tryParse()`
+- Tampilkan pesan yang user-friendly, bukan "null" di UI
+- Test aplikasi dengan data yang tidak sempurna untuk memastikan robustness
+
+## Struktur Project
+
+```
+lib/
+├── main.dart           # Main application dengan error handling
+└── model/
+    └── pizza.dart      # Pizza model dengan robust fromJson() dan toJson()
+
+assets/
+├── pizzalist.json          # Data JSON normal
+└── pizzalist_broken.json   # Data JSON tidak konsisten untuk testing
+```
+
