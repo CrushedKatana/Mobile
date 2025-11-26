@@ -14,12 +14,12 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'Store Data Nama',
+      title: 'Store Data Charel',
       theme: ThemeData(
         colorScheme: ColorScheme.fromSeed(seedColor: Colors.teal),
         useMaterial3: true,
       ),
-      home: const MyHomePage(title: 'Store Data Nama'),
+      home: const MyHomePage(title: 'Store Data Charel'),
     );
   }
 }
@@ -47,7 +47,7 @@ class _MyHomePageState extends State<MyHomePage> {
 
   Future<List<Pizza>> readJsonFile() async {
     final String response =
-        await rootBundle.loadString('assets/pizzalist.json');
+        await rootBundle.loadString('assets/pizzalist_broken.json');
     final data = jsonDecode(response);
     List pizzaMapList = data;
     List<Pizza> myPizzas = pizzaMapList.map((pizzaMap) {
@@ -84,10 +84,40 @@ class _MyHomePageState extends State<MyHomePage> {
         itemCount: myPizzas.length,
         itemBuilder: (context, index) {
           return ListTile(
-            title: Text(myPizzas[index].pizzaName),
-            subtitle: Text(myPizzas[index].description),
+            leading: CircleAvatar(
+              child: Text('${index + 1}'),
+            ),
+            title: Text(
+              myPizzas[index].pizzaName.isNotEmpty
+                  ? myPizzas[index].pizzaName
+                  : 'No name',
+            ),
+            subtitle: Text(
+              myPizzas[index].description.isNotEmpty
+                  ? myPizzas[index].description
+                  : 'No description',
+            ),
+            trailing: Text(
+              '\$${myPizzas[index].price.toStringAsFixed(2)}',
+              style: const TextStyle(
+                fontWeight: FontWeight.bold,
+                color: Colors.teal,
+              ),
+            ),
           );
         },
+      ),
+      floatingActionButton: FloatingActionButton(
+        onPressed: () {
+          ScaffoldMessenger.of(context).showSnackBar(
+            const SnackBar(
+              content: Text('📸 Ready for Screenshot!'),
+              duration: Duration(seconds: 2),
+            ),
+          );
+        },
+        tooltip: 'Ready for Screenshot',
+        child: const Icon(Icons.camera_alt),
       ),
     );
   }

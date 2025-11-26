@@ -1,0 +1,34 @@
+[ 
+    { 
+      "id": "1", 
+      "pizzaName": "Margherita", 
+      "description": "Pizza with tomato, fresh mozzarella and basil",
+      "price": 8.75, 
+      "imageUrl": "images/margherita.png" 
+    }, 
+    { 
+      "id": 2, 
+      "pizzaName": "Marinara", 
+      "price": "7.50", 
+      "imageUrl": "images/marinara.png"  
+    }, 
+    { 
+      "id": "3", 
+      "pizzaName": null, 
+      "description": "Pizza with tomato, garlic and anchovies",
+      "price": 9.50
+    }, 
+    { 
+      "id": 4, 
+      "description": "Pizza with tomato, fresh mozzarella and artichokes",
+      "price": "8.80", 
+      "imageUrl": "images/marinara.png"  
+    }, 
+    { 
+      "id": "5", 
+      "pizzaName": 12345,
+      "description": null,
+      "price": "12.50", 
+      "imageUrl": null  
+    }
+]

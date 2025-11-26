@@ -3,7 +3,7 @@
 Praktikum Week 13 - Konversi Dart Model ke JSON
 
 ## Identitas
-- **Nama**: Nama (ganti dengan nama Anda)
+- **Nama**: Charel
 - **NIM**: NIM Anda
 - **Kelas**: Kelas Anda
 
@@ -13,17 +13,18 @@ Praktikum Week 13 - Konversi Dart Model ke JSON
 **Pertanyaan**: Tambahkan nama panggilan Anda pada title app sebagai identitas hasil pekerjaan Anda. Gantilah warna tema aplikasi sesuai kesukaan Anda.
 
 **Jawaban**:
-- Saya telah menambahkan nama "Nama" pada title aplikasi
+- Saya telah menambahkan nama "Charel" pada title aplikasi
 - Mengubah warna tema dari `Colors.deepPurple` menjadi `Colors.teal`
+- Menambahkan FloatingActionButton dengan icon kamera untuk memudahkan proses screenshot
 - Perubahan dilakukan di file `main.dart` pada class `MyApp`:
   ```dart
   return MaterialApp(
-    title: 'Store Data Nama',
+    title: 'Store Data Charel',
     theme: ThemeData(
       colorScheme: ColorScheme.fromSeed(seedColor: Colors.teal),
       useMaterial3: true,
     ),
-    home: const MyHomePage(title: 'Store Data Nama'),
+    home: const MyHomePage(title: 'Store Data Charel'),
   );
   ```
 
