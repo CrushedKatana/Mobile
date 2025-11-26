@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'dart:convert';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'model/pizza.dart';
 
 void main() {
@@ -44,6 +45,7 @@ class MyHomePage extends StatefulWidget {
 
 class _MyHomePageState extends State<MyHomePage> {
   List<Pizza> myPizzas = [];
+  int appCounter = 0;
 
   Future<List<Pizza>> readJsonFile() async {
     final String response =
@@ -63,9 +65,28 @@ class _MyHomePageState extends State<MyHomePage> {
     return jsonEncode(pizzas.map((pizza) => pizza.toJson()).toList());
   }
 
+  Future<void> readAndWritePreference() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    appCounter = prefs.getInt('appCounter') ?? 0;
+    appCounter++;
+    await prefs.setInt('appCounter', appCounter);
+    setState(() {
+      appCounter = appCounter;
+    });
+  }
+
+  Future<void> deletePreference() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    await prefs.clear();
+    setState(() {
+      appCounter = 0;
+    });
+  }
+
   @override
   void initState() {
     super.initState();
+    readAndWritePreference();
     readJsonFile().then((value) {
       setState(() {
         myPizzas = value;
@@ -80,38 +101,70 @@ class _MyHomePageState extends State<MyHomePage> {
         backgroundColor: Theme.of(context).colorScheme.inversePrimary,
         title: Text(widget.title),
       ),
-      body: ListView.builder(
-        itemCount: myPizzas.length,
-        itemBuilder: (context, index) {
-          return ListTile(
-            leading: CircleAvatar(
-              child: Text('${index + 1}'),
+      body: Column(
+        children: [
+          Container(
+            padding: const EdgeInsets.all(16.0),
+            color: Colors.teal.shade50,
+            child: Column(
+              children: [
+                const SizedBox(height: 10),
+                Text(
+                  'You have opened the app $appCounter times',
+                  style: const TextStyle(
+                    fontSize: 18,
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+                const SizedBox(height: 10),
+                ElevatedButton(
+                  onPressed: deletePreference,
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: Colors.red,
+                    foregroundColor: Colors.white,
+                  ),
+                  child: const Text('Reset counter'),
+                ),
+                const SizedBox(height: 10),
+              ],
             ),
-            title: Text(
-              myPizzas[index].pizzaName.isNotEmpty
-                  ? myPizzas[index].pizzaName
-                  : 'No name',
+          ),
+          Expanded(
+            child: ListView.builder(
+              itemCount: myPizzas.length,
+              itemBuilder: (context, index) {
+                return ListTile(
+                  leading: CircleAvatar(
+                    child: Text('${index + 1}'),
+                  ),
+                  title: Text(
+                    myPizzas[index].pizzaName.isNotEmpty
+                        ? myPizzas[index].pizzaName
+                        : 'No name',
+                  ),
+                  subtitle: Text(
+                    myPizzas[index].description.isNotEmpty
+                        ? myPizzas[index].description
+                        : 'No description',
+                  ),
+                  trailing: Text(
+                    '\$${myPizzas[index].price.toStringAsFixed(2)}',
+                    style: const TextStyle(
+                      fontWeight: FontWeight.bold,
+                      color: Colors.teal,
+                    ),
+                  ),
+                );
+              },
             ),
-            subtitle: Text(
-              myPizzas[index].description.isNotEmpty
-                  ? myPizzas[index].description
-                  : 'No description',
-            ),
-            trailing: Text(
-              '\$${myPizzas[index].price.toStringAsFixed(2)}',
-              style: const TextStyle(
-                fontWeight: FontWeight.bold,
-                color: Colors.teal,
-              ),
-            ),
-          );
-        },
+          ),
+        ],
       ),
       floatingActionButton: FloatingActionButton(
         onPressed: () {
           ScaffoldMessenger.of(context).showSnackBar(
             const SnackBar(
-              content: Text('📸 Ready for Screenshot!'),
+              content: Text('Ready for Screenshot!'),
               duration: Duration(seconds: 2),
             ),
           );

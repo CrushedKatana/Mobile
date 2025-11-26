@@ -350,8 +350,8 @@ class Pizza {
 #### **Mengapa Lebih SAFE (Aman)?**
 
 1. **Compile-time Error Detection**:
-   - ❌ **String literals**: Jika salah ketik `'pizzaName'` menjadi `'pizaName'` → tidak ada error saat compile, error baru muncul saat runtime
-   - ✅ **Konstanta**: Jika salah ketik `keyPizzaName` menjadi `keyPizaName` → **compile error** langsung muncul (undefined variable)
+   - **String literals**: Jika salah ketik `'pizzaName'` menjadi `'pizaName'` → tidak ada error saat compile, error baru muncul saat runtime
+   - **Konstanta**: Jika salah ketik `keyPizzaName` menjadi `keyPizaName` → **compile error** langsung muncul (undefined variable)
 
 2. **Typo Prevention (Mencegah Kesalahan Ketik)**:
    ```dart
@@ -376,8 +376,8 @@ class Pizza {
 
 1. **Single Source of Truth**:
    - Jika nama kunci di API berubah dari `'pizzaName'` → `'name'`
-   - ❌ **String literals**: Harus cari dan ganti di **semua tempat** (fromJson, toJson, dan tempat lain)
-   - ✅ **Konstanta**: Cukup ubah **1 tempat** saja:
+   -  **String literals**: Harus cari dan ganti di **semua tempat** (fromJson, toJson, dan tempat lain)
+   -  **Konstanta**: Cukup ubah **1 tempat** saja:
    ```dart
    const String keyPizzaName = 'name';  // Ubah di sini saja!
    ```
@@ -433,24 +433,240 @@ json[keyDescriptin]   // IDE langsung merah, reviewer langsung tahu error
 #### **Perbandingan Impact**:
 
 | Aspek | String Literals | Konstanta |
-|-------|----------------|-----------|
-| **Compile-time Error** | ❌ Tidak ada | ✅ Ada |
-| **IDE Auto-complete** | ❌ Tidak ada | ✅ Ada |
-| **Find & Replace** | ⚠️ Manual, risky | ✅ Otomatis, safe |
-| **Typo Detection** | ❌ Runtime error | ✅ Compile error |
-| **Refactoring** | ⚠️ Sulit | ✅ Mudah |
-| **Team Consistency** | ⚠️ Bervariasi | ✅ Konsisten |
-| **Maintenance Time** | 🐢 Lama | ⚡ Cepat |
+|-------|----------------|-----------||
+| **Compile-time Error** | Tidak ada | Ada |
+| **IDE Auto-complete** | Tidak ada | Ada |
+| **Find & Replace** | Manual, risky | Otomatis, safe |
+| **Typo Detection** | Runtime error | Compile error |
+| **Refactoring** | Sulit | Mudah |
+| **Team Consistency** | Bervariasi | Konsisten |
+| **Maintenance Time** | Lama | Cepat |
 
 #### **Best Practice**:
-- ✅ Gunakan konstanta untuk semua kunci JSON
-- ✅ Deklarasikan konstanta di satu tempat (top of file atau separate constants file)
-- ✅ Gunakan naming convention yang jelas (contoh: `key` prefix)
-- ✅ Group related constants together
+- Gunakan konstanta untuk semua kunci JSON
+- Deklarasikan konstanta di satu tempat (top of file atau separate constants file)
+- Gunakan naming convention yang jelas (contoh: `key` prefix)
+- Group related constants together
 
 **Screenshot**: _(Klik tombol kamera untuk screenshot - aplikasi tetap berjalan normal, tidak ada perubahan visual)_
 
 **Commit**: W13: Jawaban Soal 5
+
+---
+
+## Praktikum 4: SharedPreferences
+
+### Soal 6
+**Pertanyaan**: Capture hasil praktikum Anda berupa GIF dan lampirkan di README.
+
+**Jawaban**:
+
+Pada Praktikum 4, kita mengimplementasikan **SharedPreferences** untuk menyimpan data sederhana secara persisten (data tetap ada meskipun aplikasi ditutup).
+
+#### **Implementasi SharedPreferences**:
+
+**1. Tambah Dependency**:
+```yaml
+dependencies:
+  shared_preferences: ^2.5.3
+```
+
+**2. Import Package**:
+```dart
+import 'package:shared_preferences/shared_preferences.dart';
+```
+
+**3. Deklarasi Variabel Counter**:
+```dart
+class _MyHomePageState extends State<MyHomePage> {
+  List<Pizza> myPizzas = [];
+  int appCounter = 0;  // Counter untuk tracking berapa kali app dibuka
+  // ...
+}
+```
+
+**4. Method readAndWritePreference()**:
+```dart
+Future<void> readAndWritePreference() async {
+  // Dapatkan instance SharedPreferences
+  SharedPreferences prefs = await SharedPreferences.getInstance();
+  
+  // Baca nilai dari storage, default 0 jika belum ada
+  appCounter = prefs.getInt('appCounter') ?? 0;
+  
+  // Increment counter
+  appCounter++;
+  
+  // Simpan nilai baru ke storage
+  await prefs.setInt('appCounter', appCounter);
+  
+  // Update UI
+  setState(() {
+    appCounter = appCounter;
+  });
+}
+```
+
+**5. Method deletePreference()**:
+```dart
+Future<void> deletePreference() async {
+  SharedPreferences prefs = await SharedPreferences.getInstance();
+  
+  // Hapus semua data di SharedPreferences
+  await prefs.clear();
+  
+  // Reset counter di UI
+  setState(() {
+    appCounter = 0;
+  });
+}
+```
+
+**6. Panggil di initState()**:
+```dart
+@override
+void initState() {
+  super.initState();
+  readAndWritePreference();  // Baca dan update counter saat app dibuka
+  readJsonFile().then((value) {
+    setState(() {
+      myPizzas = value;
+    });
+  });
+}
+```
+
+**7. Update UI**:
+```dart
+body: Column(
+  children: [
+    Container(
+      padding: const EdgeInsets.all(16.0),
+      color: Colors.teal.shade50,
+      child: Column(
+        children: [
+          Text(
+            'You have opened the app $appCounter times',
+            style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+          ),
+          const SizedBox(height: 10),
+          ElevatedButton(
+            onPressed: deletePreference,
+            child: const Text('Reset counter'),
+          ),
+        ],
+      ),
+    ),
+    Expanded(
+      child: ListView.builder(...),  // Pizza list
+    ),
+  ],
+),
+```
+
+#### **Cara Kerja SharedPreferences**:
+
+1. **Persistent Storage**:
+   - Data disimpan di device storage (bukan memory)
+   - Data tetap ada meskipun aplikasi ditutup atau di-restart
+   - Data akan hilang jika aplikasi di-uninstall
+
+2. **Key-Value Storage**:
+   - Data disimpan dalam format key-value pairs
+   - Key: `'appCounter'` (String)
+   - Value: `appCounter` (int)
+
+3. **Async Operations**:
+   - Semua operasi SharedPreferences adalah asynchronous
+   - Harus menggunakan `await` untuk mendapatkan hasil
+   - Method harus ditandai dengan `async`
+
+4. **Type-Specific Methods**:
+   - `setInt()`, `getInt()` untuk integer
+   - `setString()`, `getString()` untuk string
+   - `setBool()`, `getBool()` untuk boolean
+   - `setDouble()`, `getDouble()` untuk double
+   - `setStringList()`, `getStringList()` untuk list of strings
+
+#### **Skenario Penggunaan**:
+
+**Pertama kali app dibuka**:
+```
+1. readAndWritePreference() dipanggil
+2. prefs.getInt('appCounter') returns null (belum ada data)
+3. Dengan ?? 0, appCounter = 0
+4. appCounter++ → appCounter = 1
+5. prefs.setInt('appCounter', 1) → simpan ke storage
+6. UI menampilkan: "You have opened the app 1 times"
+```
+
+**Kedua kali app dibuka**:
+```
+1. readAndWritePreference() dipanggil
+2. prefs.getInt('appCounter') returns 1 (dari storage)
+3. appCounter = 1
+4. appCounter++ → appCounter = 2
+5. prefs.setInt('appCounter', 2) → update storage
+6. UI menampilkan: "You have opened the app 2 times"
+```
+
+**Saat tombol Reset ditekan**:
+```
+1. deletePreference() dipanggil
+2. prefs.clear() → hapus semua data
+3. appCounter = 0
+4. UI menampilkan: "You have opened the app 0 times"
+5. Next time app dibuka, counter mulai dari 1 lagi
+```
+
+#### **Hasil yang Ditampilkan**:
+
+**UI Components**:
+1. **Counter Display**: 
+   - Box dengan background teal menampilkan counter
+   - Format: "You have opened the app X times"
+   
+2. **Reset Button**:
+   - Tombol merah untuk reset counter
+   - Memanggil `deletePreference()` saat diklik
+   
+3. **Pizza List**:
+   - ListView tetap menampilkan data pizza di bawah counter
+   - Data pizza tidak terpengaruh oleh reset counter
+
+**Testing Steps**:
+1. Run aplikasi pertama kali → Counter = 1
+2. Close dan run lagi → Counter = 2
+3. Close dan run lagi → Counter = 3
+4. Tekan "Reset counter" → Counter = 0
+5. Close dan run lagi → Counter = 1 (mulai dari awal)
+
+#### **Keuntungan SharedPreferences**:
+
+1. **Simple & Easy**: API yang mudah digunakan untuk simple data
+2. **Persistent**: Data tidak hilang saat app ditutup
+3. **Fast**: Read/write operation sangat cepat
+4. **No Setup Required**: Tidak perlu database setup
+5. **Cross-Platform**: Bekerja di Android, iOS, Web, Desktop
+
+#### **Limitations & Best Practices**:
+
+**Limitations**:
+- Hanya untuk data sederhana (primitives & string list)
+- Tidak cocok untuk data besar atau kompleks
+- Tidak encrypted by default
+- Tidak untuk sensitive data (password, token, dll)
+
+**Best Practices**:
+- Gunakan untuk settings, preferences, small flags
+- Jangan simpan data sensitif
+- Untuk data kompleks, gunakan database (SQLite, Hive, dll)
+- Untuk secure data, gunakan flutter_secure_storage
+- Gunakan konstanta untuk keys (seperti di Praktikum 3)
+
+**Screenshot/GIF**: (Jalankan aplikasi, buka beberapa kali untuk melihat counter increment, lalu tekan Reset)
+
+**Commit**: W13: Jawaban Soal 6
 
 ---
 
@@ -480,21 +696,32 @@ json[keyDescriptin]   // IDE langsung merah, reviewer langsung tahu error
 5. **Easy Maintenance**: Refactoring lebih mudah dan aman
 6. **Code Consistency**: Standarisasi penamaan kunci JSON di seluruh aplikasi
 
+### Praktikum 4 - Persistent Storage dengan SharedPreferences:
+1. **Simple Data Persistence**: Menyimpan data sederhana yang persisten
+2. **Key-Value Storage**: Format penyimpanan yang simple dan efisien
+3. **Async Operations**: Operasi asynchronous untuk read/write data
+4. **Type-Specific Methods**: Method khusus untuk setiap tipe data
+5. **Cross-Platform**: Bekerja di semua platform Flutter
+6. **Easy Implementation**: API yang sederhana dan mudah digunakan
+
 **Best Practices yang Dipelajari**:
 - Selalu validasi data dari sumber eksternal (API, file JSON)
 - Berikan nilai default yang meaningful untuk data yang hilang atau invalid
 - Gunakan type-safe parsing methods seperti `tryParse()`
 - Tampilkan pesan yang user-friendly, bukan "null" di UI
 - Test aplikasi dengan data yang tidak sempurna untuk memastikan robustness
-- **Gunakan konstanta untuk semua string literals kunci JSON**
-- **Single Source of Truth untuk maintainability**
-- **Manfaatkan IDE auto-complete untuk mengurangi typo**
+- Gunakan konstanta untuk semua string literals kunci JSON
+- Single Source of Truth untuk maintainability
+- Manfaatkan IDE auto-complete untuk mengurangi typo
+- Gunakan SharedPreferences untuk data sederhana yang perlu persisten
+- Jangan simpan data sensitif di SharedPreferences
+- Gunakan async/await untuk operasi I/O dan storage
 
 ## Struktur Project
 
 ```
 lib/
-├── main.dart           # Main application dengan error handling
+├── main.dart           # Main application dengan error handling dan SharedPreferences
 └── model/
     └── pizza.dart      # Pizza model dengan robust fromJson() dan toJson()
 
