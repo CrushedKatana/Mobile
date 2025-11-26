@@ -1016,6 +1016,126 @@ Text(
 
 ---
 
+## Praktikum 7: Menyimpan data dengan enkripsi/dekripsi
+
+### Soal 9
+**Pertanyaan**: Capture hasil praktikum Anda berupa GIF dan lampirkan di README.
+
+**Jawaban**:
+
+#### **Implementasi Secure Storage**:
+
+Praktikum ini mengimplementasikan penyimpanan data sensitif (password) menggunakan `flutter_secure_storage` yang menyediakan enkripsi otomatis.
+
+**Package yang Digunakan**:
+```yaml
+dependencies:
+  flutter_secure_storage: ^9.2.4
+```
+
+**Fitur yang Diimplementasikan**:
+
+1. **Inisialisasi Secure Storage**:
+```dart
+final storage = const FlutterSecureStorage();
+```
+
+2. **Write Data (Encrypted)**:
+```dart
+Future<void> writeToSecureStorage() async {
+  await storage.write(key: 'myPass', value: pwdController.text);
+}
+```
+
+3. **Read Data (Decrypted)**:
+```dart
+Future<void> readFromSecureStorage() async {
+  String secret = await storage.read(key: 'myPass') ?? '';
+  setState(() {
+    myPass = secret;
+  });
+}
+```
+
+4. **User Interface**:
+   - **TextField**: Input password dengan `obscureText: true` untuk hide characters
+   - **Save Value Button**: Menyimpan password ke secure storage (encrypted)
+   - **Read Value Button**: Membaca password dari secure storage (decrypted)
+   - **Display**: Menampilkan password yang telah disimpan
+
+#### **Cara Kerja Enkripsi**:
+
+**Platform-Specific Encryption**:
+
+1. **Android**:
+   - Menggunakan `EncryptedSharedPreferences`
+   - Data dienkripsi dengan AES256 GCM
+   - Key disimpan di Android Keystore
+
+2. **iOS**:
+   - Menggunakan Keychain Services
+   - Data dienkripsi dengan AES256
+   - Protected dengan device passcode
+
+3. **Windows**:
+   - Menggunakan DPAPI (Data Protection API)
+   - Encryption tied to user account
+
+4. **Linux**:
+   - Menggunakan libsecret
+   - Data stored in system keyring
+
+5. **macOS**:
+   - Menggunakan Keychain Services
+   - Similar to iOS implementation
+
+6. **Web**:
+   - Fallback to localStorage
+   - No encryption (not recommended for production)
+
+#### **Keamanan Data**:
+
+1. **Automatic Encryption**: Data otomatis dienkripsi sebelum disimpan
+2. **Platform Native**: Menggunakan sistem enkripsi native OS
+3. **Key Management**: OS mengelola encryption keys secara otomatis
+4. **Secure Storage**: Data tidak dapat diakses oleh aplikasi lain
+5. **Biometric Protection**: Dapat dikombinasikan dengan biometric authentication
+
+#### **Use Cases**:
+
+- Menyimpan password/token
+- API keys dan credentials
+- Sensitive user data
+- Authentication tokens
+- Encryption keys
+- Personal identification
+
+#### **Best Practices**:
+
+1. **Jangan Tampilkan Plain Text**: Gunakan `obscureText` untuk password input
+2. **Validasi Input**: Check input sebelum save
+3. **Error Handling**: Handle cases ketika data tidak ditemukan (null coalescing)
+4. **Clear on Logout**: Hapus secure data saat user logout
+5. **Don't Log**: Jangan print/log sensitive data
+6. **Use Biometrics**: Combine dengan biometric auth untuk security berlapis
+
+#### **Perbandingan dengan SharedPreferences**:
+
+| Feature | SharedPreferences | Secure Storage |
+|---------|------------------|----------------|
+| Encryption | No | Yes (Platform Native) |
+| Security | Low | High |
+| Use Case | App settings, preferences | Passwords, tokens, keys |
+| Performance | Fast | Slightly slower |
+| Platform Support | All platforms | All platforms |
+| Data Type | Primitives only | String key-value |
+
+**Screenshot**: (Jalankan aplikasi, masukkan password, klik Save Value, kemudian Read Value untuk melihat hasilnya)
+
+**Commit**: W13: Jawaban Soal 9
+
+---
+
 ## Kesimpulan
 
 ### Praktikum 1 - Deserialization & Serialization:
@@ -1066,6 +1186,14 @@ Text(
 5. **Error Handling**: Try-catch untuk menangani error I/O operations
 6. **Persistent Data**: File tetap ada meskipun aplikasi ditutup (berbeda dengan state)
 
+### Praktikum 7 - Secure Storage dengan Enkripsi:
+1. **flutter_secure_storage**: Package untuk menyimpan data sensitif dengan enkripsi
+2. **Platform-Native Encryption**: Menggunakan sistem enkripsi native OS (Keychain, Keystore, dll)
+3. **Key-Value Storage**: Format penyimpanan encrypted key-value pairs
+4. **Automatic Encryption/Decryption**: Data otomatis dienkripsi saat write, didekripsi saat read
+5. **Secure by Default**: Data protected oleh OS security mechanisms
+6. **Cross-Platform**: Implementasi berbeda per platform namun API konsisten
+
 **Best Practices yang Dipelajari**:
 - Selalu validasi data dari sumber eksternal (API, file JSON)
 - Berikan nilai default yang meaningful untuk data yang hilang atau invalid
@@ -1086,17 +1214,31 @@ Text(
 - Gunakan writeAsString() untuk data text, writeAsBytes() untuk binary data
 - File operations bersifat asynchronous, pastikan menggunakan await
 - Combine path_provider dengan dart:io untuk file management lengkap
+- Gunakan flutter_secure_storage untuk menyimpan data sensitif (password, tokens)
+- Jangan gunakan SharedPreferences untuk data sensitif
+- Always use obscureText untuk password TextField
+- Implement error handling dengan null coalescing operator (??)
+- Clear secure storage saat user logout
+- Jangan log atau print data sensitif
+- Pilih storage yang tepat: SharedPreferences (settings), Secure Storage (credentials), File (documents)
 
 ## Struktur Project
 
 ```
 lib/
-├── main.dart           # Main application dengan semua fitur Praktikum 1-6
+├── main.dart           # Main application dengan semua fitur Praktikum 1-7
 └── model/
     └── pizza.dart      # Pizza model dengan robust fromJson() dan toJson()
 
 assets/
 ├── pizzalist.json          # Data JSON normal
 └── pizzalist_broken.json   # Data JSON tidak konsisten untuk testing
+
+pubspec.yaml               # Dependencies configuration
 ```
+
+**Dependencies**:
+- `shared_preferences: ^2.5.3` - Simple key-value persistent storage
+- `path_provider: ^2.1.5` - Platform-agnostic filesystem paths  
+- `flutter_secure_storage: ^9.2.4` - Encrypted secure storage untuk data sensitif
 

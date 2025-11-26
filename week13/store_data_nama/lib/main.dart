@@ -4,6 +4,7 @@ import 'dart:convert';
 import 'dart:io';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:path_provider/path_provider.dart';
+import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'model/pizza.dart';
 
 void main() {
@@ -52,6 +53,9 @@ class _MyHomePageState extends State<MyHomePage> {
   String tempPath = '';
   late File myFile;
   String fileText = '';
+  final pwdController = TextEditingController();
+  String myPass = '';
+  final storage = const FlutterSecureStorage();
 
   Future<List<Pizza>> readJsonFile() async {
     final String response =
@@ -118,6 +122,17 @@ class _MyHomePageState extends State<MyHomePage> {
         fileText = 'Error reading file: $e';
       });
     }
+  }
+
+  Future<void> writeToSecureStorage() async {
+    await storage.write(key: 'myPass', value: pwdController.text);
+  }
+
+  Future<void> readFromSecureStorage() async {
+    String secret = await storage.read(key: 'myPass') ?? '';
+    setState(() {
+      myPass = secret;
+    });
   }
 
   @override
@@ -237,6 +252,68 @@ class _MyHomePageState extends State<MyHomePage> {
                     fontSize: 16,
                     fontWeight: FontWeight.bold,
                     color: Colors.teal,
+                  ),
+                ),
+                const SizedBox(height: 10),
+              ],
+            ),
+          ),
+          Container(
+            padding: const EdgeInsets.all(16.0),
+            color: Colors.orange.shade50,
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                const Text(
+                  'Secure Storage (Encrypted):',
+                  style: TextStyle(
+                    fontSize: 16,
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+                const SizedBox(height: 10),
+                TextField(
+                  controller: pwdController,
+                  decoration: const InputDecoration(
+                    labelText: 'Enter password',
+                    border: OutlineInputBorder(),
+                    hintText: 'Type your secret password',
+                  ),
+                  obscureText: true,
+                ),
+                const SizedBox(height: 10),
+                Row(
+                  children: [
+                    Expanded(
+                      child: ElevatedButton(
+                        onPressed: writeToSecureStorage,
+                        style: ElevatedButton.styleFrom(
+                          backgroundColor: Colors.green,
+                          foregroundColor: Colors.white,
+                        ),
+                        child: const Text('Save Value'),
+                      ),
+                    ),
+                    const SizedBox(width: 10),
+                    Expanded(
+                      child: ElevatedButton(
+                        onPressed: readFromSecureStorage,
+                        style: ElevatedButton.styleFrom(
+                          backgroundColor: Colors.orange,
+                          foregroundColor: Colors.white,
+                        ),
+                        child: const Text('Read Value'),
+                      ),
+                    ),
+                  ],
+                ),
+                const SizedBox(height: 10),
+                Text(
+                  'Stored Password: $myPass',
+                  style: const TextStyle(
+                    fontSize: 16,
+                    fontWeight: FontWeight.bold,
+                    color: Colors.orange,
                   ),
                 ),
                 const SizedBox(height: 10),
