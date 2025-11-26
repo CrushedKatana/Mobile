@@ -670,6 +670,268 @@ body: Column(
 
 ---
 
+## Praktikum 5: Akses filesystem dengan path_provider
+
+### Soal 7
+**Pertanyaan**: Capture hasil praktikum Anda dan lampirkan di README.
+
+**Jawaban**:
+
+Pada Praktikum 5, kita mengimplementasikan **path_provider** untuk mengakses direktori sistem file pada perangkat. Package ini memungkinkan kita mendapatkan path ke direktori documents dan temporary.
+
+#### **Implementasi path_provider**:
+
+**1. Tambah Dependency**:
+```yaml
+dependencies:
+  path_provider: ^2.1.5
+```
+
+**2. Import Package**:
+```dart
+import 'dart:io';
+import 'package:path_provider/path_provider.dart';
+```
+
+**3. Deklarasi Variabel untuk Menyimpan Paths**:
+```dart
+class _MyHomePageState extends State<MyHomePage> {
+  List<Pizza> myPizzas = [];
+  int appCounter = 0;
+  String documentsPath = '';  // Path ke documents directory
+  String tempPath = '';       // Path ke temporary directory
+  // ...
+}
+```
+
+**4. Method getPaths()**:
+```dart
+Future<void> getPaths() async {
+  // Dapatkan directory documents
+  final Directory documentsDir = await getApplicationDocumentsDirectory();
+  
+  // Dapatkan directory temporary
+  final Directory tempDir = await getTemporaryDirectory();
+  
+  // Update state dengan path yang didapat
+  setState(() {
+    documentsPath = documentsDir.path;
+    tempPath = tempDir.path;
+  });
+}
+```
+
+**5. Panggil di initState()**:
+```dart
+@override
+void initState() {
+  super.initState();
+  readAndWritePreference();
+  getPaths();  // Panggil untuk mendapatkan paths
+  readJsonFile().then((value) {
+    setState(() {
+      myPizzas = value;
+    });
+  });
+}
+```
+
+**6. Update UI untuk Menampilkan Paths**:
+```dart
+Container(
+  padding: const EdgeInsets.all(16.0),
+  color: Colors.blue.shade50,
+  child: Column(
+    crossAxisAlignment: CrossAxisAlignment.start,
+    children: [
+      const Text(
+        'File System Paths:',
+        style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+      ),
+      const SizedBox(height: 8),
+      Row(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          const SizedBox(
+            width: 120,
+            child: Text(
+              'Documents:',
+              style: TextStyle(fontWeight: FontWeight.w600),
+            ),
+          ),
+          Expanded(
+            child: Text(documentsPath, style: const TextStyle(fontSize: 12)),
+          ),
+        ],
+      ),
+      const SizedBox(height: 8),
+      Row(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          const SizedBox(
+            width: 120,
+            child: Text(
+              'Temporary:',
+              style: TextStyle(fontWeight: FontWeight.w600),
+            ),
+          ),
+          Expanded(
+            child: Text(tempPath, style: const TextStyle(fontSize: 12)),
+          ),
+        ],
+      ),
+    ],
+  ),
+),
+```
+
+#### **Penjelasan Direktori**:
+
+**1. Documents Directory (`getApplicationDocumentsDirectory()`)**:
+- **Purpose**: Untuk menyimpan file yang dibuat oleh user atau app
+- **Persistence**: Data persisten, tidak akan dihapus oleh sistem
+- **Backup**: Di-backup saat user backup device
+- **Accessibility**: Hanya accessible oleh aplikasi ini
+- **Use Cases**:
+  - User documents
+  - Database files
+  - Downloaded files
+  - User-generated content
+
+**Platform-specific paths**:
+- Android: `/data/user/0/com.example.app/app_flutter`
+- iOS: `<Application_Home>/Documents`
+- Windows: `C:\Users\<username>\AppData\Roaming\<app_name>`
+- macOS: `~/Library/Containers/<app_name>/Data/Documents`
+
+**2. Temporary Directory (`getTemporaryDirectory()`)**:
+- **Purpose**: Untuk menyimpan file temporary/cache
+- **Persistence**: Bisa dihapus kapan saja oleh sistem
+- **Backup**: Tidak di-backup
+- **Accessibility**: Hanya accessible oleh aplikasi ini
+- **Use Cases**:
+  - Cache files
+  - Temporary downloads
+  - Image thumbnails
+  - Processing temporary files
+
+**Platform-specific paths**:
+- Android: `/data/user/0/com.example.app/cache`
+- iOS: `<Application_Home>/Library/Caches`
+- Windows: `C:\Users\<username>\AppData\Local\Temp\<app_name>`
+- macOS: `~/Library/Caches/<app_name>`
+
+#### **Direktori Lain yang Tersedia**:
+
+```dart
+// External storage (Android only)
+Directory? externalDir = await getExternalStorageDirectory();
+
+// Support directory untuk app files
+Directory supportDir = await getApplicationSupportDirectory();
+
+// Downloads directory
+Directory? downloadsDir = await getDownloadsDirectory();
+```
+
+#### **Cara Kerja path_provider**:
+
+1. **Platform Detection**:
+   - Package secara otomatis mendeteksi platform (Android, iOS, Web, Desktop)
+   - Mengembalikan path yang sesuai dengan platform
+
+2. **Async Operation**:
+   - Semua method adalah asynchronous
+   - Perlu menggunakan `await` atau `.then()`
+   - Method harus ditandai dengan `async`
+
+3. **Directory Object**:
+   - Mengembalikan objek `Directory` dari `dart:io`
+   - Bisa akses property `.path` untuk mendapat String path
+   - Bisa operasi file/directory langsung
+
+#### **Contoh Penggunaan dalam Real App**:
+
+**Menyimpan File ke Documents**:
+```dart
+Future<void> writeFile(String content) async {
+  final Directory documentsDir = await getApplicationDocumentsDirectory();
+  final File file = File('${documentsDir.path}/myfile.txt');
+  await file.writeAsString(content);
+}
+```
+
+**Membaca File dari Documents**:
+```dart
+Future<String> readFile() async {
+  final Directory documentsDir = await getApplicationDocumentsDirectory();
+  final File file = File('${documentsDir.path}/myfile.txt');
+  return await file.readAsString();
+}
+```
+
+**Clear Cache (Temporary Directory)**:
+```dart
+Future<void> clearCache() async {
+  final Directory tempDir = await getTemporaryDirectory();
+  if (tempDir.existsSync()) {
+    tempDir.deleteSync(recursive: true);
+  }
+}
+```
+
+#### **Hasil yang Ditampilkan**:
+
+**UI Components**:
+1. **Counter Section** (Teal background):
+   - Menampilkan SharedPreferences counter
+   - Button reset counter
+
+2. **File System Paths Section** (Blue background):
+   - Label "File System Paths:"
+   - Documents path dengan label "Documents:"
+   - Temporary path dengan label "Temporary:"
+   - Path ditampilkan dalam font kecil agar muat
+
+3. **Pizza List Section**:
+   - ListView dengan data pizza
+   - Tidak terpengaruh oleh path_provider
+
+**Example Output Paths**:
+```
+Documents: /data/user/0/com.example.store_data_nama/app_flutter
+Temporary: /data/user/0/com.example.store_data_nama/cache
+```
+
+#### **Best Practices**:
+
+1. **Pilih Directory yang Tepat**:
+   - Documents: untuk data penting user
+   - Temporary: untuk cache yang bisa dihapus
+   - Application Support: untuk app data internal
+
+2. **Error Handling**:
+   - Selalu handle kemungkinan error saat akses file system
+   - Check apakah directory exists sebelum operasi
+
+3. **Clean Up**:
+   - Periodic cleanup temporary directory
+   - Jangan simpan data besar di temp directory
+
+4. **Permissions**:
+   - Android: Tidak perlu permission untuk app-specific directories
+   - External storage perlu permission di AndroidManifest.xml
+
+5. **Testing**:
+   - Test di berbagai platform (Android, iOS, dll)
+   - Pastikan path sesuai dengan platform
+
+**Screenshot**: (Jalankan aplikasi untuk melihat paths yang ditampilkan sesuai platform Anda)
+
+**Commit**: W13: Jawaban Soal 7
+
+---
+
 ## Kesimpulan
 
 ### Praktikum 1 - Deserialization & Serialization:
@@ -704,6 +966,14 @@ body: Column(
 5. **Cross-Platform**: Bekerja di semua platform Flutter
 6. **Easy Implementation**: API yang sederhana dan mudah digunakan
 
+### Praktikum 5 - File System Access dengan path_provider:
+1. **Platform-Independent Paths**: Mendapatkan path sistem yang sesuai dengan platform
+2. **Documents Directory**: Akses ke direktori untuk menyimpan file permanen user
+3. **Temporary Directory**: Akses ke direktori untuk cache dan file temporary
+4. **Async File Operations**: Operasi asynchronous untuk akses file system
+5. **Cross-Platform Support**: Bekerja di Android, iOS, Web, Windows, macOS, Linux
+6. **Directory Object**: Objek Directory untuk operasi file/folder lanjutan
+
 **Best Practices yang Dipelajari**:
 - Selalu validasi data dari sumber eksternal (API, file JSON)
 - Berikan nilai default yang meaningful untuk data yang hilang atau invalid
@@ -716,12 +986,15 @@ body: Column(
 - Gunakan SharedPreferences untuk data sederhana yang perlu persisten
 - Jangan simpan data sensitif di SharedPreferences
 - Gunakan async/await untuk operasi I/O dan storage
+- Pilih direktori yang tepat sesuai dengan jenis data (Documents vs Temporary)
+- Selalu handle error saat akses file system
+- Clean up temporary files secara berkala
 
 ## Struktur Project
 
 ```
 lib/
-├── main.dart           # Main application dengan error handling dan SharedPreferences
+├── main.dart           # Main application dengan error handling, SharedPreferences, dan path_provider
 └── model/
     └── pizza.dart      # Pizza model dengan robust fromJson() dan toJson()
 

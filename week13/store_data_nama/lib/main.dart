@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'dart:convert';
+import 'dart:io';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:path_provider/path_provider.dart';
 import 'model/pizza.dart';
 
 void main() {
@@ -46,6 +48,8 @@ class MyHomePage extends StatefulWidget {
 class _MyHomePageState extends State<MyHomePage> {
   List<Pizza> myPizzas = [];
   int appCounter = 0;
+  String documentsPath = '';
+  String tempPath = '';
 
   Future<List<Pizza>> readJsonFile() async {
     final String response =
@@ -83,10 +87,20 @@ class _MyHomePageState extends State<MyHomePage> {
     });
   }
 
+  Future<void> getPaths() async {
+    final Directory documentsDir = await getApplicationDocumentsDirectory();
+    final Directory tempDir = await getTemporaryDirectory();
+    setState(() {
+      documentsPath = documentsDir.path;
+      tempPath = tempDir.path;
+    });
+  }
+
   @override
   void initState() {
     super.initState();
     readAndWritePreference();
+    getPaths();
     readJsonFile().then((value) {
       setState(() {
         myPizzas = value;
@@ -124,6 +138,61 @@ class _MyHomePageState extends State<MyHomePage> {
                     foregroundColor: Colors.white,
                   ),
                   child: const Text('Reset counter'),
+                ),
+                const SizedBox(height: 10),
+              ],
+            ),
+          ),
+          Container(
+            padding: const EdgeInsets.all(16.0),
+            color: Colors.blue.shade50,
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                const Text(
+                  'File System Paths:',
+                  style: TextStyle(
+                    fontSize: 16,
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+                const SizedBox(height: 8),
+                Row(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    const SizedBox(
+                      width: 120,
+                      child: Text(
+                        'Documents:',
+                        style: TextStyle(fontWeight: FontWeight.w600),
+                      ),
+                    ),
+                    Expanded(
+                      child: Text(
+                        documentsPath,
+                        style: const TextStyle(fontSize: 12),
+                      ),
+                    ),
+                  ],
+                ),
+                const SizedBox(height: 8),
+                Row(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    const SizedBox(
+                      width: 120,
+                      child: Text(
+                        'Temporary:',
+                        style: TextStyle(fontWeight: FontWeight.w600),
+                      ),
+                    ),
+                    Expanded(
+                      child: Text(
+                        tempPath,
+                        style: const TextStyle(fontSize: 12),
+                      ),
+                    ),
+                  ],
                 ),
                 const SizedBox(height: 10),
               ],
