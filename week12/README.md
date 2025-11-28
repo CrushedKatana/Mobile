@@ -1,8 +1,8 @@
 # Laporan Praktikum Week 12 - Streams
 
 **Nama:** Charel  
-**NIM:** [NIM Anda]  
-**Kelas:** [Kelas Anda]
+**NIM:** 2341720205 
+**Kelas:** 3I
 
 ---
 
@@ -39,8 +39,6 @@ return MaterialApp(
 **Screenshot:**
 
 <details>
-<summary>📸 Klik untuk melihat screenshot</summary>
-
 ![Screenshot Soal 1](docs/praktikum1/soal1.png)
 
 </details>
@@ -99,16 +97,9 @@ Kode ini membuat Stream yang:
 ### Soal 4
 **Langkah 12: Run - Background berubah warna setiap detik**
 
-> **Note:** Praktikum ini dimodifikasi menggunakan button untuk memudahkan screenshot, bukan menggunakan background yang berubah otomatis.
-
 **Screenshot:**
 
-<details>
-<summary>📸 Klik untuk melihat screenshot</summary>
-
 ![Screenshot Soal 4](docs/praktikum1/soal4.png)
-
-</details>
 
 ---
 
@@ -170,12 +161,8 @@ void addRandomNumber() {
 
 **Screenshot:**
 
-<details>
-<summary>📸 Klik untuk melihat screenshot</summary>
-
 ![Screenshot Soal 6](docs/praktikum2/soal6.png)
 
-</details>
 
 ---
 
@@ -224,12 +211,8 @@ Random Number (0-9) → Stream → Transformer (×10) → Output (0-90)
 
 **Screenshot:**
 
-<details>
-<summary>📸 Klik untuk melihat screenshot</summary>
-
 ![Screenshot Soal 8](docs/praktikum3/soal8.png)
 
-</details>
 
 ---
 
@@ -271,12 +254,8 @@ Mengecek status stream sebelum add data untuk mencegah error.
 
 **Screenshot:**
 
-<details>
-<summary>📸 Klik untuk melihat screenshot</summary>
-
 ![Screenshot Soal 9](docs/praktikum4/soal9.png)
 
-</details>
 
 ---
 
@@ -330,12 +309,8 @@ Karena ada 2 listeners aktif. Setiap event diterima oleh KEDUA subscription, seh
 
 **Screenshot:**
 
-<details>
-<summary>📸 Klik untuk melihat screenshot</summary>
-
 ![Screenshot Soal 10-11](docs/praktikum5/soal10-11.png)
 
-</details>
 
 ---
 
@@ -387,19 +362,15 @@ StreamBuilder(
 ```
 
 **Keuntungan StreamBuilder:**
-- ✅ Otomatis manage subscription lifecycle
-- ✅ Otomatis rebuild UI saat ada data baru
-- ✅ Tidak perlu manual setState()
-- ✅ Tidak perlu manual dispose()
+-  Otomatis manage subscription lifecycle
+-  Otomatis rebuild UI saat ada data baru
+-  Tidak perlu manual setState()
+-  Tidak perlu manual dispose()
 
 **Screenshot:**
 
-<details>
-<summary>📸 Klik untuk melihat screenshot</summary>
-
 ![Screenshot Soal 12](docs/praktikum6/soal12.png)
 
-</details>
 
 ---
 
@@ -474,10 +445,10 @@ Praktikum ini mengajarkan implementasi **BLoC (Business Logic Component) Pattern
 | **State** | Output ke UI | `snapshot.data` |
 
 **Keuntungan BLoC Pattern:**
-- ✅ **Separation**: UI terpisah dari logic
-- ✅ **Testability**: BLoC bisa ditest tanpa UI
-- ✅ **Reusability**: BLoC bisa dipakai di berbagai widget
-- ✅ **Maintainability**: Kode lebih terstruktur dan mudah dimaintain
+-  **Separation**: UI terpisah dari logic
+-  **Testability**: BLoC bisa ditest tanpa UI
+-  **Reusability**: BLoC bisa dipakai di berbagai widget
+-  **Maintainability**: Kode lebih terstruktur dan mudah dimaintain
 
 **Screenshot:**
 
