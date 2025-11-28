@@ -4,8 +4,8 @@ Praktikum Week 13 - Konversi Dart Model ke JSON
 
 ## Identitas
 - **Nama**: Charel
-- **NIM**: NIM Anda
-- **Kelas**: Kelas Anda
+- **NIM**: 2341720205
+- **Kelas**: 3I
 
 ## Praktikum 1: Konversi Dart model ke JSON
 
@@ -44,8 +44,6 @@ Pada langkah ini, aplikasi berhasil membaca file `pizzalist.json` dan menampilka
 - Method `readJsonFile()` menggunakan `rootBundle.loadString()` untuk membaca file
 - Data JSON ditampilkan menggunakan widget `ListView` dengan `Text(pizzaString)`
 
-**Screenshot**: _(Jalankan aplikasi pada tahap ini untuk mendapatkan screenshot)_
-
 **Commit**: W13: Jawaban Soal 2
 
 ---
@@ -82,7 +80,6 @@ Pada langkah ini, aplikasi berhasil mengkonversi data JSON menjadi objek Dart (L
 - Data JSON berhasil di-decode menjadi List objek Pizza
 - Objek Pizza berhasil di-encode kembali menjadi JSON string (terlihat di Debug Console)
 
-**Screenshot**: _(Jalankan aplikasi untuk mendapatkan screenshot ListView dengan data pizza)_
 
 **Output Console**:
 ```json
@@ -102,42 +99,6 @@ Praktikum ini berhasil mendemonstrasikan:
 4. **Async programming**: Menggunakan `Future`, `async/await`, dan `.then()`
 5. **State management**: Update state dengan data dari async operation
 6. **ListView.builder**: Menampilkan list data secara efisien
-
-## Struktur Project
-
-```
-lib/
-├── main.dart           # Main application dengan MyApp dan MyHomePage
-└── model/
-    └── pizza.dart      # Model class Pizza dengan fromJson() dan toJson()
-
-assets/
-└── pizzalist.json      # Data JSON untuk list pizza
-```
-
-## Cara Menjalankan
-
-1. Clone repository
-2. Masuk ke direktori project:
-   ```bash
-   cd week13/store_data_nama
-   ```
-3. Install dependencies:
-   ```bash
-   flutter pub get
-   ```
-4. Jalankan aplikasi:
-   ```bash
-   flutter run
-   ```
-
-## Dependencies
-
-- Flutter SDK
-- dart:convert (built-in)
-- flutter/services.dart (untuk rootBundle)
-
----
 
 ## Praktikum 2: Handle kompatibilitas data JSON
 
@@ -958,7 +919,7 @@ Future<bool> writeFile() async {
 - **writeAsString()**: Method dari class File yang menulis string ke file
 - **await**: Menunggu operasi penulisan file selesai (asynchronous I/O operation)
 - **try-catch**: Error handling untuk menangani kegagalan penulisan file (misal: permission denied, disk full)
-- **Content**: String 'Charel - 2241760083' adalah data yang ditulis (nama dan NIM)
+- **Content**: String 'Charel - 2341720205' adalah data yang ditulis (nama dan NIM)
 
 **Proses yang terjadi**:
 1. Method dipanggil setelah myFile diinisialisasi dengan path lengkap
@@ -1135,110 +1096,3 @@ Future<void> readFromSecureStorage() async {
 **Commit**: W13: Jawaban Soal 9
 
 ---
-
-## Kesimpulan
-
-### Praktikum 1 - Deserialization & Serialization:
-1. **Deserialization**: Konversi JSON → Dart Object menggunakan `fromJson()`
-2. **Serialization**: Konversi Dart Object → JSON menggunakan `toJson()`
-3. **Penggunaan `dart:convert`**: Untuk `jsonDecode()` dan `jsonEncode()`
-4. **Async programming**: Menggunakan `Future`, `async/await`, dan `.then()`
-5. **State management**: Update state dengan data dari async operation
-6. **ListView.builder**: Menampilkan list data secara efisien
-
-### Praktikum 2 - Error Handling & Data Validation:
-1. **Type Safety**: Menggunakan `tryParse()` untuk konversi tipe data yang aman
-2. **Null Safety**: Menggunakan null coalescing operator (`??`) untuk handle null values
-3. **Safe Navigation**: Menggunakan `?.` operator untuk akses property yang mungkin null
-4. **Type Conversion**: Menggunakan `toString()` untuk memastikan tipe data String
-5. **User-Friendly UI**: Menggunakan ternary operator untuk tampilan yang lebih baik
-6. **Graceful Degradation**: Aplikasi tetap berjalan meskipun data tidak sempurna
-
-### Praktikum 3 - JSON Error Prevention dengan Konstanta:
-1. **String Constants**: Menggunakan konstanta untuk kunci JSON menggantikan string literals
-2. **Compile-time Safety**: Error typo terdeteksi saat compile, bukan runtime
-3. **Single Source of Truth**: Perubahan kunci JSON hanya perlu dilakukan di satu tempat
-4. **IDE Support**: Auto-complete dan IntelliSense untuk mengurangi error
-5. **Easy Maintenance**: Refactoring lebih mudah dan aman
-6. **Code Consistency**: Standarisasi penamaan kunci JSON di seluruh aplikasi
-
-### Praktikum 4 - Persistent Storage dengan SharedPreferences:
-1. **Simple Data Persistence**: Menyimpan data sederhana yang persisten
-2. **Key-Value Storage**: Format penyimpanan yang simple dan efisien
-3. **Async Operations**: Operasi asynchronous untuk read/write data
-4. **Type-Specific Methods**: Method khusus untuk setiap tipe data
-5. **Cross-Platform**: Bekerja di semua platform Flutter
-6. **Easy Implementation**: API yang sederhana dan mudah digunakan
-
-### Praktikum 5 - File System Access dengan path_provider:
-1. **Platform-Independent Paths**: Mendapatkan path sistem yang sesuai dengan platform
-2. **Documents Directory**: Akses ke direktori untuk menyimpan file permanen user
-3. **Temporary Directory**: Akses ke direktori untuk cache dan file temporary
-4. **Async File Operations**: Operasi asynchronous untuk akses file system
-5. **Cross-Platform Support**: Bekerja di Android, iOS, Web, Windows, macOS, Linux
-6. **Directory Object**: Objek Directory untuk operasi file/folder lanjutan
-
-### Praktikum 6 - File Operations dengan dart:io:
-1. **File Class**: Menggunakan class File dari dart:io untuk operasi file
-2. **writeAsString()**: Menulis data string ke file secara asynchronous
-3. **readAsString()**: Membaca content file sebagai string
-4. **File Path**: Kombinasi directory path dan filename untuk lokasi file lengkap
-5. **Error Handling**: Try-catch untuk menangani error I/O operations
-6. **Persistent Data**: File tetap ada meskipun aplikasi ditutup (berbeda dengan state)
-
-### Praktikum 7 - Secure Storage dengan Enkripsi:
-1. **flutter_secure_storage**: Package untuk menyimpan data sensitif dengan enkripsi
-2. **Platform-Native Encryption**: Menggunakan sistem enkripsi native OS (Keychain, Keystore, dll)
-3. **Key-Value Storage**: Format penyimpanan encrypted key-value pairs
-4. **Automatic Encryption/Decryption**: Data otomatis dienkripsi saat write, didekripsi saat read
-5. **Secure by Default**: Data protected oleh OS security mechanisms
-6. **Cross-Platform**: Implementasi berbeda per platform namun API konsisten
-
-**Best Practices yang Dipelajari**:
-- Selalu validasi data dari sumber eksternal (API, file JSON)
-- Berikan nilai default yang meaningful untuk data yang hilang atau invalid
-- Gunakan type-safe parsing methods seperti `tryParse()`
-- Tampilkan pesan yang user-friendly, bukan "null" di UI
-- Test aplikasi dengan data yang tidak sempurna untuk memastikan robustness
-- Gunakan konstanta untuk semua string literals kunci JSON
-- Single Source of Truth untuk maintainability
-- Manfaatkan IDE auto-complete untuk mengurangi typo
-- Gunakan SharedPreferences untuk data sederhana yang perlu persisten
-- Jangan simpan data sensitif di SharedPreferences
-- Gunakan async/await untuk operasi I/O dan storage
-- Pilih direktori yang tepat sesuai dengan jenis data (Documents vs Temporary)
-- Selalu handle error saat akses file system
-- Clean up temporary files secara berkala
-- Gunakan File class dari dart:io untuk operasi read/write file
-- Implement try-catch untuk semua file I/O operations
-- Gunakan writeAsString() untuk data text, writeAsBytes() untuk binary data
-- File operations bersifat asynchronous, pastikan menggunakan await
-- Combine path_provider dengan dart:io untuk file management lengkap
-- Gunakan flutter_secure_storage untuk menyimpan data sensitif (password, tokens)
-- Jangan gunakan SharedPreferences untuk data sensitif
-- Always use obscureText untuk password TextField
-- Implement error handling dengan null coalescing operator (??)
-- Clear secure storage saat user logout
-- Jangan log atau print data sensitif
-- Pilih storage yang tepat: SharedPreferences (settings), Secure Storage (credentials), File (documents)
-
-## Struktur Project
-
-```
-lib/
-├── main.dart           # Main application dengan semua fitur Praktikum 1-7
-└── model/
-    └── pizza.dart      # Pizza model dengan robust fromJson() dan toJson()
-
-assets/
-├── pizzalist.json          # Data JSON normal
-└── pizzalist_broken.json   # Data JSON tidak konsisten untuk testing
-
-pubspec.yaml               # Dependencies configuration
-```
-
-**Dependencies**:
-- `shared_preferences: ^2.5.3` - Simple key-value persistent storage
-- `path_provider: ^2.1.5` - Platform-agnostic filesystem paths  
-- `flutter_secure_storage: ^9.2.4` - Encrypted secure storage untuk data sensitif
-
